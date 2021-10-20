@@ -20,9 +20,10 @@ class CreateInternsTable extends Migration
             $table->string('city');
             $table->string('address');
             $table->string('email')->unique();
-            $table->integer('phone');
+            $table->string('phone');
             $table->foreignId("group_id");
             $table->foreignId("assignament_id");
+            $table->timestamps();
         });
     }
 

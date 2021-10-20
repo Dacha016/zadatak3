@@ -9,4 +9,11 @@ class Intern extends Model
 {
     use HasFactory;
     protected $guarded=[];
+
+    public function assignments(){
+        return $this->hasMany(Assignment::class);
+    }
+    public function groups(){
+        return $this->hasOne(Group::class);
+    }
 }
