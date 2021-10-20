@@ -14,4 +14,16 @@ class MentorController extends Controller
         return response()->json(Mentor::find($id),200);
 
     }
+    public function store(Request $request ){
+        $mentor= Mentor::create($request->all());
+        return response()->json($mentor,200);
+    }
+    public function update(Request $request, Mentor $mentor ){
+        $mentor->update($request->all());
+        return response()->json($mentor,200);
+    }
+    public function destroy( Mentor $mentor){
+        $mentor->delete();
+        return response()->json(null, 204);
+    }
 }

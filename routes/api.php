@@ -20,3 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get("mentors",[MentorController::class, "index"]);
 Route::get("mentors/{id}",[MentorController::class, "show"]);
+Route::post("mentors",[MentorController::class, "store"]);
+Route::put("mentors/{mentor}",[MentorController::class, "update"]);
+Route::delete("mentors/{mentor}",[MentorController::class, "destroy"]);
