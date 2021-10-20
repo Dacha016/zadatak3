@@ -21,6 +21,8 @@ class CreateMentorsTable extends Migration
             $table->string('skype');
             $table->string('username');
             $table->string('password');
+            $table->foreignId("intern_id");
+            $table->foreignId("group_id");
         });
     }
 
