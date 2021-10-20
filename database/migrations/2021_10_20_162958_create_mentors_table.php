@@ -15,8 +15,7 @@ class CreateMentorsTable extends Migration
     {
         Schema::create('mentors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('surname');
+            $table->string('fullName');
             $table->string('city');
             $table->string('skype');
             $table->string('username');
