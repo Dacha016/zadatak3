@@ -16,6 +16,6 @@ class Mentor extends Model
         return $this->hasMany(Intern::class);
     }
     public function group(){
-        return $this->hasOne(Group::class);
+        return $this->hasMany(Group::class);
     }
 }

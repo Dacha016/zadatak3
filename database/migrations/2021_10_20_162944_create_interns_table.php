@@ -15,13 +15,15 @@ class CreateInternsTable extends Migration
     {
         Schema::create('interns', function (Blueprint $table) {
             $table->id();
-            $table->string('fullName');
+            $table->string('name');
+            $table->string('surname');
             $table->string('city');
-            $table->string('address');
+            $table->string('address')->nullable();
             $table->string('email')->unique();
-            $table->string('phone');
-            $table->foreignId("group_id");
-            $table->foreignId("assignment_id");
+            $table->string('phone')->nullable();
+            $table->string('role');
+            $table->foreignId("group_id")->nullable();
+            $table->foreignId("assignment_id")->nullable();
             $table->timestamps();
         });
     }

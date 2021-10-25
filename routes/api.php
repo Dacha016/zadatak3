@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MentorController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +24,4 @@ Route::get("mentors/{id}",[MentorController::class, "show"]);
 Route::post("mentors",[MentorController::class, "store"]);
 Route::put("mentors/{mentor}",[MentorController::class, "update"]);
 Route::delete("mentors/{mentor}",[MentorController::class, "destroy"]);
+Route::post("register",[RegisterController::class, "register"]);
