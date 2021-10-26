@@ -21,6 +21,7 @@ class CreateInternsTable extends Migration
             $table->string('address')->nullable();
             $table->string('email')->unique();
             $table->string('phone')->nullable();
+            $table->string("CV")->nullable();
             $table->string('role');
             $table->foreignId("group_id")->nullable();
             $table->foreignId("assignment_id")->nullable();

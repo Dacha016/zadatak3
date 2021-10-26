@@ -13,5 +13,15 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $guarded=[];
+    protected $table = "users";
 
+    public function interns(){
+        return $this->hasMany(Intern::class);
+    }
+    public function mentors(){
+        return $this->hasMany(Mentor::class);
+    }
+    public function admins(){
+        return $this->hasMany(Admin::class);
+    }
 }

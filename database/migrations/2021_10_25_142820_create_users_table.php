@@ -17,13 +17,17 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('surname');
-            $table->string('city');
-            $table->string('skype');
+            $table->string('city')->nullable();
+            $table->string('address')->nullable();
+            $table->string('skype')->nullable();
             $table->string('email')->nullable();
             $table->string('password')->nullable();
-            $table->string("role");
+            $table->string('phone')->nullable();
+            $table->string("CV")->nullable();
+            $table->string("role")->nullable();
             $table->foreignId("intern_id")->nullable();
             $table->foreignId("group_id")->nullable();
+            $table->foreignId("assignment_id")->nullable();
             $table->timestamps();
         });
     }

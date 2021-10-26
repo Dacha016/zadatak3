@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MentorController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
@@ -25,3 +27,6 @@ Route::post("mentors",[MentorController::class, "store"]);
 Route::put("mentors/{mentor}",[MentorController::class, "update"]);
 Route::delete("mentors/{mentor}",[MentorController::class, "destroy"]);
 Route::post("register",[RegisterController::class, "register"]);
+Route::post("login",[LoginController::class,"login"]);
+Route::post("logout",[LogoutController::class,"logout"]);
+
