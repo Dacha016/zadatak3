@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,31 +19,27 @@ class LoginController extends RegisterController
             "email"=>["required","max:255","email",],
             "password"=>["required","min:6","string"]
         ]);
-        $user = User::where("email",$attributes["email"])->first();
+        if($user = User::where("email",$attributes["email"])->first()){
+            return response()->json([
+                "status"=>200,
+                "data"=>[
+                    "user"=>$user
+                ]
+            ]);
+        }
+        if($user = Admin::where("email",$attributes["email"])->first()){
+            return response()->json([
+                "status"=>200,
+                "data"=>[
+                    "user"=>$user
+                ]
+            ]);
+        }
         if(!$user ){
             return response()->json([
-                        "status"=>401,
-                        "message"=>"Credentilans not match"
-                    ],401);
+                "status"=>401,
+                "message"=>"Credentilans not match"
+            ],401);
         }
-
-    //     $user = Auth::attempt(['email' => $attributes["email"], 'password' => $attributes["password"]]);
-
-    //  if(  !Auth::check()){
-    //     return response()->json([
-    //         "status"=>401,
-    //         "message"=>"Credentilans not match"
-    //     ],401);
-    //  }
-
-        $token= $user-> createToken("API Token")->plainTextToken;
-
-        return response()->json([
-        "status"=>200,
-        "data"=>[
-            "user"=>$user,
-            "token"=>$token
-        ]
-    ]);
     }
 }
