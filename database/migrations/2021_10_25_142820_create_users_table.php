@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('phone')->nullable();
             $table->string("CV")->nullable();
+            $table->string("gitHub")->nullable();
             $table->string("role")->nullable();
             $table->foreignId("intern_id")->nullable();
             $table->foreignId("group_id")->nullable();

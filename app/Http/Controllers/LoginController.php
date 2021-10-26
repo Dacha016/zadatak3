@@ -2,14 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-
-
-
 
 class LoginController extends RegisterController
 {
@@ -19,27 +13,21 @@ class LoginController extends RegisterController
             "email"=>["required","max:255","email",],
             "password"=>["required","min:6","string"]
         ]);
-        if($user = User::where("email",$attributes["email"])->first()){
-            return response()->json([
-                "status"=>200,
-                "data"=>[
-                    "user"=>$user
-                ]
-            ]);
-        }
-        if($user = Admin::where("email",$attributes["email"])->first()){
-            return response()->json([
-                "status"=>200,
-                "data"=>[
-                    "user"=>$user
-                ]
-            ]);
-        }
+        $user = User::where("email",$attributes["email"])->first();
+        $token= $user-> createToken("API Token")->plainTextToken;
         if(!$user ){
             return response()->json([
                 "status"=>401,
                 "message"=>"Credentilans not match"
             ],401);
         }
+
+        return response()->json([
+            "status"=>200,
+            "data"=>[
+                "user"=>$user,
+                "token"=>$token
+            ]
+        ]);
     }
 }
