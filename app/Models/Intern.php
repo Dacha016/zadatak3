@@ -8,7 +8,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Intern extends Model
 {
-    use HasApiTokens,HasFactory;
+    use HasApiTokens;
     protected $guarded=[];
 
     public function assignments(){

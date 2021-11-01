@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\Assignment;
 use App\Models\Group;
 use App\Models\Intern;
 use App\Models\Mentor;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,18 +23,19 @@ class DatabaseSeeder extends Seeder
         Mentor::truncate();
         Group::truncate();
         Assignment::truncate();
+        Role::truncate();
+        Admin::truncate();
 
-        $intern = Intern::factory()->create();
-        $mentor = Mentor::factory(2)->create();
-        // $php = Group::create([
-        //     "title"=>"PHP"
-        // ]);
-        // $js = Group::create([
-        //     "title"=>"JAVASCRIPT"
-        // ]);
-        // $java = Group::create([
-        //     "title"=>"JAVA"
-        // ]);
-        $assignment = Assignment::factory()->create();
+        Role::create(["name"=>"Admin"]);
+        Role::create(["name"=>"Recruiter"]);
+        Role::create(["name"=>"Mentor"]);
+        Admin::create([
+            "name"=>"Admin",
+            "surname"=>"Admin",
+            "email"=>"admin@gmail.com",
+            "password"=>bcrypt("123456"),
+            "role_id"=>1
+        ]);
+
     }
 }

@@ -22,7 +22,7 @@ class CreateMentorsTable extends Migration
             $table->string('skype')->nullable();
             $table->string('email')->nullable()->unique();
             $table->string('password')->nullable();
-            $table->string("role");
+            $table->foreignId("role_id");
             $table->foreignId("intern_id")->nullable();
             $table->foreignId("group_id")->nullable();
             $table->timestamps();

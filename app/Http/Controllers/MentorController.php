@@ -7,16 +7,20 @@ use Illuminate\Http\Request;
 
 class MentorController extends Controller
 {
+    // public function __construct(){
+    //     $this->authorizeResource(Mentor::class,"mentors");
+    // }
+
     public function index(){
-        return response()->json(Mentor::get(),200);
+            return response()->json(Mentor::get(),200);
     }
     public function show($id){
-        return response()->json(Mentor::find($id),200);
-
+            return response()->json(Mentor::find($id),200);
     }
     public function store(Request $request ){
-        $mentor= Mentor::create($request->all());
-        return response()->json($mentor,200);
+        $this->authorize("create",Mentor::class);
+            $mentor= Mentor::create($request->all());
+            return response()->json($mentor,200);
     }
     public function update(Request $request, Mentor $mentor ){
         $mentor->update($request->all());

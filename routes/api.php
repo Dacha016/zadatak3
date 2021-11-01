@@ -18,15 +18,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-Route::get("mentors",[MentorController::class, "index"]);
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+
+// Route::get("mentors",[MentorController::class, "index"]);
 Route::get("mentors/{id}",[MentorController::class, "show"]);
-Route::post("mentors",[MentorController::class, "store"]);
+Route::post("mentors",[MentorController::class, "store"])->middleware("can");
 Route::put("mentors/{mentor}",[MentorController::class, "update"]);
 Route::delete("mentors/{mentor}",[MentorController::class, "destroy"]);
+Route::post("admin/register",[MentorController::class, "store"]);
 Route::post("register",[RegisterController::class, "register"]);
 Route::post("login",[LoginController::class,"login"]);
 Route::post("logout",[LogoutController::class,"logout"]);
+Route::get("logged",[RegisterController::class, "loggedUser"]);
 
+Route::group(['prefix' => 'admin','middleware' => 'auth:api'],function(){
+    Route::post("logout",[LogoutController::class,"logout"]);
+    // Route::post("register",[RegisterController::class, "register"]);
+    Route::get("mentors/{id}",[MentorController::class, "show"]);
+    Route::post("/mentors",[MentorController::class, "store"]);
+    Route::put("mentors/{mentor}",[MentorController::class, "update"]);
+    Route::delete("mentors/{mentor}",[MentorController::class, "destroy"]);
+    Route::get("logged",[RegisterController::class, "loggedUser"]);
+});

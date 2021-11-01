@@ -8,7 +8,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Mentor extends Model
 {
-    use  HasApiTokens, HasFactory;
+    use  HasApiTokens;
     protected $table = "mentors";
 
     protected $guarded=[];

@@ -19,7 +19,7 @@ class CreateRecruitersTable extends Migration
             $table->string('surname');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string("role");
+            $table->foreignId("role_id");
             $table->timestamps();
         });
     }

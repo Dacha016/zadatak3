@@ -8,6 +8,6 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Recruiter extends Model
 {
-    use HasApiTokens, HasFactory;
+    use HasApiTokens;
     protected $guarded=[];
 }
