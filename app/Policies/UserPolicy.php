@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Mentor;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class MentorPolicy
+class UserPolicy
 {
     use HandlesAuthorization;
 
@@ -19,19 +18,19 @@ class MentorPolicy
      */
     public function viewAny(User $user)
     {
-        return in_array($user->role_id,[Role::IS_ADMIN,Role::IS_RECRUITER]);
+        //
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Mentor  $mentor
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Mentor $mentor)
+    public function view(User $user, User $model)
     {
-        return in_array($user->role,["Admin","Recruiter"]);
+        //
     }
 
     /**
@@ -42,54 +41,54 @@ class MentorPolicy
      */
     public function create(User $user)
     {
-        return $user->role=="Admin";
+        return in_array($user->role_id,[Role::IS_ADMIN,Role::IS_RECRUITER]);
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Mentor  $mentor
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Mentor $mentor)
+    public function update(User $user, User $model)
     {
-        return in_array($user->role,["Admin","Recruiter"]);
+        //
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Mentor  $mentor
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Mentor $mentor)
+    public function delete(User $user, User $model)
     {
-        return in_array($user->role,["Admin","Recruiter"]);
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Mentor  $mentor
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Mentor $mentor)
+    public function restore(User $user, User $model)
     {
-        return in_array($user->role,["Admin","Recruiter"]);
+        //
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Mentor  $mentor
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Mentor $mentor)
+    public function forceDelete(User $user, User $model)
     {
-        return in_array($user->role,["Admin","Recruiter"]);
+        //
     }
 }

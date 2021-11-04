@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\LogoutController;
+
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\MentorController;
-use App\Http\Controllers\RegisterController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,28 +18,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+
 //     return $request->user();
 // });
 
 
 
-// Route::get("mentors",[MentorController::class, "index"]);
-Route::get("mentors/{id}",[MentorController::class, "show"]);
-Route::post("mentors",[MentorController::class, "store"])->middleware("can");
-Route::put("mentors/{mentor}",[MentorController::class, "update"]);
-Route::delete("mentors/{mentor}",[MentorController::class, "destroy"]);
-Route::post("admin/register",[MentorController::class, "store"]);
-Route::post("register",[RegisterController::class, "register"]);
-Route::post("login",[LoginController::class,"login"]);
-Route::post("logout",[LogoutController::class,"logout"]);
-Route::get("logged",[RegisterController::class, "loggedUser"]);
+    Route::post("/login",[LoginController::class,"login"]);
 
-Route::group(['prefix' => 'admin','middleware' => 'auth:api'],function(){
+Route::group(['prefix' => 'admin','middleware' => 'auth:sanctum'],function(){
+    Route::post("/mentors/create",[UserController::class, "store"]);
+    Route::get("mentors/{id}",[UserController::class, "show"]);
+    Route::put("mentors/{mentor}",[UserController::class, "update"]);
+    Route::delete("mentors/{mentor}",[UserController::class, "destroy"]);
     Route::post("logout",[LogoutController::class,"logout"]);
-    // Route::post("register",[RegisterController::class, "register"]);
-    Route::get("mentors/{id}",[MentorController::class, "show"]);
-    Route::post("/mentors",[MentorController::class, "store"]);
-    Route::put("mentors/{mentor}",[MentorController::class, "update"]);
-    Route::delete("mentors/{mentor}",[MentorController::class, "destroy"]);
-    Route::get("logged",[RegisterController::class, "loggedUser"]);
 });

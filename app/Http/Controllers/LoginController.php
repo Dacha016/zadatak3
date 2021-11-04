@@ -3,42 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController extends RegisterController
+class LoginController extends Controller
 {
     public function login(Request $request){
-        // if(!$request->header('Authorization')){
-        //     return response()->json([
-        //         "status"=>401,
-        //         "message"=>"Credentilans not match"
-        //     ],401);
-        // }
-        $attributes = $request->validate([
-            "email"=>["required","max:255","email",],
-            "password"=>["required","min:6","string"]
-        ]);
-        $user=User::where("email",$attributes["email"])->first();
 
-        Auth::loginUsingId($user->id);
-        if(!$user ){
+        if(!Auth::check()){
+            $attributes = $request->validate([
+                "email"=>["required","max:255","email",],
+                "password"=>["required","min:6","string"]
+            ]);
+             $user=User::where("email",$attributes["email"])->first();
+
+            Auth::attempt(['email' => $attributes["email"], 'password' => $attributes["password"]]);
+
+            if(!$user ){
+                return response()->json([
+                    "status"=>401,
+                    "message"=>"Credentilans not match"
+                ],401);
+            }
+            $token=$user->createToken("Api Token")->plainTextToken;
             return response()->json([
-                "status"=>401,
-                "message"=>"Credentilans not match"
-            ],401);
+                "status"=>200,
+                "data"=>[
+                    "user"=>  Auth::user(),
+                    "token"=>$token
+                ]
+            ]);
         }
-         $token=$user->createToken("Api Token")->plainTextToken;
-        // $request["api_token"]=$token;
-
-
         return response()->json([
-            "status"=>200,
-            "data"=>[
-                "user"=>  Auth::user(),
-                "token"=>$token
-            ]
-        ]);
+            "status"=>403,
+            "message"=>"Forbidden"
+
+        ],403);
     }
 }
