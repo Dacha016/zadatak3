@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\Assignment;
 use App\Models\Group;
 use App\Models\Role;
-use App\Models\User;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -24,7 +25,7 @@ class DatabaseSeeder extends Seeder
         Role::create(["name"=>"Admin"]);
         Role::create(["name"=>"Recruiter"]);
         Role::create(["name"=>"Mentor"]);
-        User::create([
+        Admin::create([
             "name"=>"Admin",
             "surname"=>"Admin",
             "email"=>"admin@gmail.com",
