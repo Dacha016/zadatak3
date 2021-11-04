@@ -21,9 +21,9 @@ class CreateMentorsTable extends Migration
             $table->string('skype')->nullable();
             $table->string('email')->nullable();
             $table->string('password')->nullable();
-            $table->foreignId("role_id");
-            $table->foreignId("intern_id")->nullable();
-            $table->foreignId("group_id")->nullable();
+            $table->foreignId("role_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("intern_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("group_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

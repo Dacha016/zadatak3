@@ -2,13 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Admin;
-
-use App\Models\Mentor;
 use App\Models\RegisteredUsers;
-use App\Policies\MentorPolicy;
-
-
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -20,11 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-
-
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-
-
     ];
 
     /**
@@ -37,11 +27,11 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
 // mentors
-    Gate::define('show-mentor', function (RegisteredUsers $registeredUsers ) {
-        if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
-            return true;
-        }
-    });
+        Gate::define('show-mentor', function (RegisteredUsers $registeredUsers ) {
+            if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
+                return true;
+            }
+        });
         Gate::define('create-mentor', function (RegisteredUsers $registeredUsers ) {
             if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
                 return true;
@@ -58,27 +48,25 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 // Recruiters
-    Gate::define('show-recruiter', function (RegisteredUsers $registeredUsers ) {
-        if( $registeredUsers->role_id == 1 ){
-            return true;
-        }
-    });
-        Gate::define('create-recruiter', function (RegisteredUsers $registeredUsers ) {
+        Gate::define('show', function (RegisteredUsers $registeredUsers ) {
             if( $registeredUsers->role_id == 1 ){
                 return true;
             }
         });
-        Gate::define('update-recruiter', function (RegisteredUsers $registeredUsers ) {
+        Gate::define('create', function (RegisteredUsers $registeredUsers ) {
             if( $registeredUsers->role_id == 1 ){
                 return true;
             }
         });
-        Gate::define('delete-recruiter', function (RegisteredUsers $registeredUsers ) {
+        Gate::define('update', function (RegisteredUsers $registeredUsers ) {
             if( $registeredUsers->role_id == 1 ){
                 return true;
             }
         });
-
-
+        Gate::define('delete', function (RegisteredUsers $registeredUsers ) {
+            if( $registeredUsers->role_id == 1 ){
+                return true;
+            }
+        });
     }
 }
