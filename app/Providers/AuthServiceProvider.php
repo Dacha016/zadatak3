@@ -36,7 +36,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-
+// mentors
+    Gate::define('show-mentor', function (RegisteredUsers $registeredUsers ) {
+        if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
+            return true;
+        }
+    });
         Gate::define('create-mentor', function (RegisteredUsers $registeredUsers ) {
             if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
                 return true;
@@ -52,7 +57,27 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
         });
-
+// Recruiters
+    Gate::define('show-recruiter', function (RegisteredUsers $registeredUsers ) {
+        if( $registeredUsers->role_id == 1 ){
+            return true;
+        }
+    });
+        Gate::define('create-recruiter', function (RegisteredUsers $registeredUsers ) {
+            if( $registeredUsers->role_id == 1 ){
+                return true;
+            }
+        });
+        Gate::define('update-recruiter', function (RegisteredUsers $registeredUsers ) {
+            if( $registeredUsers->role_id == 1 ){
+                return true;
+            }
+        });
+        Gate::define('delete-recruiter', function (RegisteredUsers $registeredUsers ) {
+            if( $registeredUsers->role_id == 1 ){
+                return true;
+            }
+        });
 
 
     }

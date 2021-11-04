@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Admins\LogoutController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Mentors\LogoutController as MentorsLogoutController;
 use App\Http\Controllers\Mentors\MentorController;
+use App\Http\Controllers\Recruiters\LogoutController as RecruitersLogoutController;
+use App\Http\Controllers\Recruiters\RecruiterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,11 +21,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::post("/login",[LoginController::class,"login"])->middleware("guest");
 
-Route::group(['prefix' => 'admin','middleware' => 'auth:sanctum'],function(){
-    Route::post("/mentors/create",[MentorController::class, "store"])->middleware("can:create-mentor, mentor");
-    Route::get("mentors/{id}",[MentorController::class, "show"])->middleware("can:show-mentor, mentor");  //  mozda bo trebalo profile
-    Route::put("mentors/{mentor}",[MentorController::class, "update"])->middleware("can:update-mentor, mentor");
-    Route::delete("mentors/{mentor}",[MentorController::class, "destroy"])->middleware("can:delete-mentor, mentor");
-    Route::post("logout",[ LogoutController::class, "logout"]);
+Route::group(['prefix' => 'recruiter','middleware' => 'auth:sanctum',],function(){
+    Route::post("/create",[RecruiterController::class, "store"])->middleware("can:create-recruiter, recruiter");
+    Route::post("/{id}",[RecruiterController::class, "show"])->middleware("can:show-recruiter, recruiter");
+    Route::post("/{mentor}",[RecruiterController::class, "update"])->middleware("can:update-recruiter, recruiter");
+    Route::post("/{mentor}",[RecruiterController::class, "delete"])->middleware("can:delete-recruiter, recruiter");
+    Route::post("/logout",[RecruitersLogoutController::class, "logout"]);
+
+});
+
+Route::group(['prefix' => 'mentors','middleware' => 'auth:sanctum',],function(){
+    Route::post("/create",[MentorController::class, "store"])->middleware("can:create-mentor, mentor");
+    Route::get("/{id}",[MentorController::class, "show"])->middleware("can:show-mentor, mentor");  //  mozda bo trebalo profile
+    Route::put("/{mentor}",[MentorController::class, "update"])->middleware("can:update-mentor, mentor");
+    Route::delete("/{mentor}",[MentorController::class, "destroy"])->middleware("can:delete-mentor, mentor");
+    Route::post("/logout",[ MentorsLogoutController::class, "logout"]);
 
 });

@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Mentors;
+namespace App\Http\Controllers\Recruiters;
 
 use App\Http\Controllers\Controller;
-use App\Models\Mentor;
+use App\Models\Recruiter;
 use App\Models\RegisteredUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LogoutController extends Controller
 {
-    protected $guarded=[];
-
-
     public function logout(Request $request){
 
         if(!$request->header('Authorization')){
@@ -24,11 +21,7 @@ class LogoutController extends Controller
             return response()->json('Bad token');
         }
 
-        if(Auth::check()){
-            return response()->json(["You are already logged in"]);
-        }
-
-        $user=Mentor::where("email",$request["email"])->first();
+        $user=Recruiter::where("email",$request["email"])->first();
         if(!$user){
             return response()->json([
                 "status"=>401,
@@ -37,12 +30,13 @@ class LogoutController extends Controller
         };
 
         if(Auth::check()){
+            $rUser=RegisteredUsers::where("email",Auth::user()->email)->first();
+            $rUser->delete();
             Auth::user()->tokens->each(function($token, $key) {
-                $rUser=RegisteredUsers::where("email",Auth::user()->email)->first();
-                $rUser->delete();
                 $token->delete();
             });
         }
+
         return response()->json(["You are logged out"]);
     }
 }
