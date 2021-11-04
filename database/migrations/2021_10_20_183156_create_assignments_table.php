@@ -15,10 +15,11 @@ class CreateAssignmentsTable extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->string("assignment");
+            $table->string("title");
+            $table->text("description");
+            $table->foreignId("group_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamp("start_at")->nullable();
             $table->timestamp("end_at")->nullable();
-            $table->boolean("done")->default(false);
             $table->timestamps();
         });
     }

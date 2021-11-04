@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admins\AdminController;
 use App\Http\Controllers\Admins\LogoutController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Mentors\LogoutController as MentorsLogoutController;
@@ -22,10 +23,19 @@ use Illuminate\Support\Facades\Route;
 Route::post("/login",[LoginController::class,"login"])->middleware("guest");
 
 Route::group(['prefix' => 'recruiters','middleware' => 'auth:sanctum',],function(){
+    Route::post("/create",[AdminController::class, "store"])->middleware("can:create, recruiter");
+    Route::post("/{id}",[AdminController::class, "show"])->middleware("can:show, recruiter");
+    Route::post("/{admin}",[AdminController::class, "update"])->middleware("can:update, recruiter");
+    Route::post("/{admin}",[AdminController::class, "delete"])->middleware("can:delete, recruiter");
+    Route::post("/logout",[LogoutController::class, "logout"]);
+
+});
+
+Route::group(['prefix' => 'recruiters','middleware' => 'auth:sanctum',],function(){
     Route::post("/create",[RecruiterController::class, "store"])->middleware("can:create, recruiter");
     Route::post("/{id}",[RecruiterController::class, "show"])->middleware("can:show, recruiter");
-    Route::post("/{mentor}",[RecruiterController::class, "update"])->middleware("can:update, recruiter");
-    Route::post("/{mentor}",[RecruiterController::class, "delete"])->middleware("can:delete, recruiter");
+    Route::post("/{recruiter}",[RecruiterController::class, "update"])->middleware("can:update, recruiter");
+    Route::post("/{recruiter}",[RecruiterController::class, "delete"])->middleware("can:delete, recruiter");
     Route::post("/logout",[RecruitersLogoutController::class, "logout"]);
 
 });

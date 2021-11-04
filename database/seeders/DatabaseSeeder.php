@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         Role::create(["name"=>"Admin"]);
         Role::create(["name"=>"Recruiter"]);
         Role::create(["name"=>"Mentor"]);
+        Role::create(["name"=>"Intern"]);
         Admin::create([
             "name"=>"Admin",
             "surname"=>"Admin",
