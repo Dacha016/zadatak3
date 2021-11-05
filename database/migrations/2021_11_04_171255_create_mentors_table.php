@@ -22,7 +22,6 @@ class CreateMentorsTable extends Migration
             $table->string('email')->nullable();
             $table->string('password')->nullable();
             $table->foreignId("role_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId("intern_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId("group_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

@@ -10,5 +10,8 @@ class RegisteredUsers extends Authenticatable
 {
     use  HasApiTokens,HasFactory;
     protected $guarded=[];
-    
+
+    public function role(){
+        return $this->belongsToMany(Role::class);
+    }
 }

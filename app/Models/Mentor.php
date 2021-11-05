@@ -13,9 +13,7 @@ class Mentor extends Model
 
     protected $guarded=[];
 
-    public function interns(){
-        return $this->hasMany(Intern::class);
-    }
+
     public function group(){
         return $this->hasMany(Group::class);
     }

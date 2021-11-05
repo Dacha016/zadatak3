@@ -16,6 +16,9 @@ class CreateGroupsTable extends Migration
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string("title");
+            $table->foreignId("mentor_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("intern_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("assignment_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

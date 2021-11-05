@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Admin;
 use App\Models\Assignment;
 use App\Models\Group;
+use App\Models\Intern;
 use App\Models\Role;
 
 use Illuminate\Database\Seeder;
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
         Group::truncate();
         Assignment::truncate();
         Role::truncate();
+        Intern::truncate();
 
         Role::create(["name"=>"Admin"]);
         Role::create(["name"=>"Recruiter"]);
