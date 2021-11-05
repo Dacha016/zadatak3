@@ -9,7 +9,7 @@ class Intern extends Model
 {
     use HasFactory;
     public function group(){
-        return $this->hasOne(Group::class);
+        return $this->belongsTo(Group::class);
     }
     public function role(){
         return $this->belongsTo(Role::class);

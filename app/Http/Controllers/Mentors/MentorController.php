@@ -18,10 +18,10 @@ class MentorController extends Controller
     }
     public function store(Request $request ){
         $attributes = $request->validate([
-            "name"=>["string","max:255","alpha"],
-            "surname"=>["string","max:255","alpha"],
-            "city"=>["string","max:255","alpha"],
-            "skype"=>["string","max:255","alpha_num"],
+            "name"=>["string","max:255"],
+            "surname"=>["string","max:255"],
+            "city"=>["string","max:255"],
+            "skype"=>["string","max:255"],
             "email"=>["required","max:255","email"],
             "password"=>["required","min:6","string"],
             "role_id"=>["required","numeric"]

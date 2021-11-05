@@ -94,7 +94,7 @@ Route::group(['middleware' => 'auth:sanctum',],function(){
         Route::put("/{assignment}",[AssignmentController::class, "update"])->middleware("can:update-all, assignment");
         Route::delete("/{assignment}",[AssignmentController::class, "destroy"])->middleware("can:delete-all, assignment");
     });
-    Route::group(['prefix' => 'assignments'],function(){
+    Route::group(['prefix' => 'interns'],function(){
         Route::post("/create",[InternController::class, "store"])->middleware("can:create-all, intern");
         Route::put("/{assignment}",[InternController::class, "update"])->middleware("can:update-all, intern");
         Route::delete("/{assignment}",[InternController::class, "destroy"])->middleware("can:delete-all, intern");

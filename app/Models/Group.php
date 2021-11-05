@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
-   
+
     protected $guarded=[];
-    public function mentor(){
-        return $this->belongsTo(Mentor::class);
+    public function mentors(){
+        return $this->hasMany(Mentor::class);
     }
-    public function intern(){
-        return $this->belongsTo(Intern::class);
+    public function interns(){
+        return $this->hasMany(Intern::class);
     }
-    public function assignment(){
-        return $this->belongsTo(Assignment::class);
+    public function assignments(){
+        return $this->hasMany(Assignment::class);
     }
 }

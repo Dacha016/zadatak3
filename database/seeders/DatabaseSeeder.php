@@ -19,11 +19,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Group::truncate();
-        Assignment::truncate();
-        Role::truncate();
-        Intern::truncate();
-
         Role::create(["name"=>"Admin"]);
         Role::create(["name"=>"Recruiter"]);
         Role::create(["name"=>"Mentor"]);
@@ -35,7 +30,5 @@ class DatabaseSeeder extends Seeder
             "password"=>bcrypt("123456"),
             "role_id"=>1
         ]);
-
-
     }
 }

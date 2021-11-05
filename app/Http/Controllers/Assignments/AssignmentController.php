@@ -16,8 +16,8 @@ class AssignmentController extends Controller
     }
     public function store(Request $request ){
         $attributes = $request->validate([
-            "title"=>["string","max:255","alpha",],
-            "description"=>["string","alpha_num"],
+            "title"=>["string","max:255"],
+            "description"=>["string"],
             "group_id"=>["numeric"],
             "start_at"=>["date"],
             "end_at"=>["date"]
