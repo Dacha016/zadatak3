@@ -26,68 +26,20 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-// mentors
-        Gate::define('show', function (RegisteredUsers $registeredUsers ) {
-            if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
-                return true;
-            }
-        });
-        Gate::define('create', function (RegisteredUsers $registeredUsers ) {
-            if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
-                return true;
-            }
-        });
-        Gate::define('update', function (RegisteredUsers $registeredUsers ) {
-            if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
-                return true;
-            }
-        });
-        Gate::define('delete', function (RegisteredUsers $registeredUsers ) {
-            if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
-                return true;
-            }
-        });
-// Recruiters
-        Gate::define('show-admin', function (RegisteredUsers $registeredUsers ) {
-            if( $registeredUsers->role_id == 1 ){
-                return true;
-            }
-        });
-        Gate::define('create-admin', function (RegisteredUsers $registeredUsers ) {
-            if( $registeredUsers->role_id == 1 ){
-                return true;
-            }
-        });
-        Gate::define('update-admin', function (RegisteredUsers $registeredUsers ) {
-            if( $registeredUsers->role_id == 1 ){
-                return true;
-            }
-        });
-        Gate::define('delete-admin', function (RegisteredUsers $registeredUsers ) {
-            if( $registeredUsers->role_id == 1 ){
-                return true;
-            }
-        });
-
-        Gate::define('show-all', function (RegisteredUsers $registeredUsers ) {
-            if( $registeredUsers->role_id == 1 || $registeredUsers->role_id ==2){
-                return true;
-            }
-        });
-        Gate::define('create-all', function (RegisteredUsers $registeredUsers ) {
-            if( in_array($registeredUsers->role_id,[1,2,3])){
-                return true;
-            }
-        });
-        Gate::define('update-all', function (RegisteredUsers $registeredUsers ) {
-            if( in_array($registeredUsers->role_id,[1,2,3])){
-                return true;
-            }
-        });
-        Gate::define('delete-all', function (RegisteredUsers $registeredUsers ) {
-            if( in_array($registeredUsers->role_id,[1,2,3])){
-                return true;
-            }
-        });
+// Recruiter-Admin
+        Gate::define('show', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
+        Gate::define('create', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
+        Gate::define('update', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
+        Gate::define('delete', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
+// Admins
+        Gate::define('show-admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
+        Gate::define('create-admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
+        Gate::define('update-admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
+        Gate::define('delete-admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
+//All
+        Gate::define('show-all', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
+        Gate::define('create-all', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
+        Gate::define('update-all', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
+        Gate::define('delete-all', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
     }
 }
