@@ -13,7 +13,14 @@ class InternController extends Controller
         return response()->json(Intern::get(),200);
 }
 public function show($id,Intern $intern){
-        return response()->json(Intern::find($id),200);
+    $intern=Intern::leftjoin("groups","groups.id","=","interns.group_id")
+    ->leftjoin("assignments","assignments.id","=","interns.assignment_id")
+    ->where("interns.id","$id")
+    ->get(["interns.name","interns.surname","interns.city","interns.address","interns.email","interns.phone","interns.CV","interns.gitHub","groups.title as group_title","assignments.title as assignment_title"]);
+    return response()->json([
+        "status"=>200,
+        "data"=>"$intern"
+    ],200);
 }
 public function store(Request $request ){
     $attributes = $request->validate([

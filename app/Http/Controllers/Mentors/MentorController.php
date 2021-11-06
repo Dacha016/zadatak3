@@ -14,7 +14,14 @@ class MentorController extends Controller
             return response()->json(Mentor::get(),200);
     }
     public function show($id,Mentor $mentor){
-            return response()->json(Mentor::find($id),200);
+        $mentor=Mentor::leftjoin("groups","groups.id","=","mentors.group_id")
+        ->rightjoin("interns","interns.mentor_id","=","mentors.id")
+        ->where("mentors.id","$id")
+        ->get(["mentors.name","mentors.surname","mentors.city","mentors.skype","interns.name as intern_name","interns.surname as intern_surname","groups.title as group_title"]);
+        return response()->json([
+            "status"=>200,
+            "data"=>"$mentor"
+        ],200);
     }
     public function store(Request $request ){
         $attributes = $request->validate([

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Intern extends Model
 {
     use HasFactory;
+    protected $guarded=[];
     public function group(){
         return $this->belongsTo(Group::class);
     }
