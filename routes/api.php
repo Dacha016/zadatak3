@@ -60,17 +60,17 @@ Route::get("interns/{id}",[InternController::class, "show"]);
 Route::group(['middleware' => 'auth:sanctum',],function(){
     Route::group(['prefix' => 'admins'],function(){
         Route::post("/create",[AdminController::class, "store"])->middleware("can:create-admin, admin");
-        Route::post("/{id}",[AdminController::class, "show"])->middleware("can:show-admin, admin");
-        Route::post("/{admin}",[AdminController::class, "update"])->middleware("can:update-admin, admin");
-        Route::post("/{admin}",[AdminController::class, "delete"])->middleware("can:delete-admin, admin");
+        Route::get("/{id}",[AdminController::class, "show"])->middleware("can:show-admin, admin");
+        Route::put("/{admin}",[AdminController::class, "update"])->middleware("can:update-admin, admin");
+        Route::delete("/{admin}",[AdminController::class, "destroy"])->middleware("can:delete-admin, admin");
         Route::post("/logout",[LogoutController::class, "logout"]);
 
     });
     Route::group(['prefix' => 'recruiters'],function(){
         Route::post("/create",[RecruiterController::class, "store"])->middleware("can:create-admin, recruiter");
-        Route::post("/{id}",[RecruiterController::class, "show"])->middleware("can:show-admin, recruiter");
-        Route::post("/{recruiter}",[RecruiterController::class, "update"])->middleware("can:update-admin, recruiter");
-        Route::post("/{recruiter}",[RecruiterController::class, "delete"])->middleware("can:delete-admin, recruiter");
+        Route::get("/{id}",[RecruiterController::class, "show"])->middleware("can:show-admin, recruiter");
+        Route::put("/{recruiter}",[RecruiterController::class, "update"])->middleware("can:update-admin, recruiter");
+        Route::delete("/{recruiter}",[RecruiterController::class, "destroy"])->middleware("can:delete-admin, recruiter");
         Route::post("/logout",[RecruitersLogoutController::class, "logout"]);
 
     });
@@ -85,8 +85,8 @@ Route::group(['middleware' => 'auth:sanctum',],function(){
     Route::group(['prefix' => 'groups'],function(){
         Route::post("/create",[GroupController::class, "store"])->middleware("can:create-all, group");
         Route::get("/{id}",[GroupController::class, "show"])->middleware("can:show-all, group");
-        Route::put("/{mentor}",[GroupController::class, "update"])->middleware("can:update-all, group");
-        Route::delete("/{mentor}",[GroupController::class, "destroy"])->middleware("can:delete-all, group");
+        Route::put("/{group}",[GroupController::class, "update"])->middleware("can:update-all, group");
+        Route::delete("/{group}",[GroupController::class, "destroy"])->middleware("can:delete-all, group");
     });
     Route::group(['prefix' => 'assignments'],function(){
         Route::post("/create",[AssignmentController::class, "store"])->middleware("can:create-all, assignment");
@@ -96,8 +96,8 @@ Route::group(['middleware' => 'auth:sanctum',],function(){
     });
     Route::group(['prefix' => 'interns'],function(){
         Route::post("/create",[InternController::class, "store"])->middleware("can:create-all, intern");
-        Route::put("/{assignment}",[InternController::class, "update"])->middleware("can:update-all, intern");
-        Route::delete("/{assignment}",[InternController::class, "destroy"])->middleware("can:delete-all, intern");
+        Route::put("/{intern}",[InternController::class, "update"])->middleware("can:update-all, intern");
+        Route::delete("/{intern}",[InternController::class, "destroy"])->middleware("can:delete-all, intern");
     });
 
 });

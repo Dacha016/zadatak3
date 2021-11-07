@@ -44,9 +44,11 @@ public function store(Request $request ){
 
         ],422);
     }
-
         $intern= Intern::create($attributes);
-        return response()->json($intern,200);
+        return response()->json([
+            "status"=>200,
+            "data"=>"$intern"
+        ],200);
 }
 public function update(Request $request, Intern $intern ){
     $attributes = $request->validate([
@@ -54,11 +56,11 @@ public function update(Request $request, Intern $intern ){
         "surname"=>["string","max:255"],
         "city"=>["string","max:255"],
         "adderss"=>["string","max:255"],
-        "email"=>["required","max:255","email"],
+        "email"=>["max:255","email"],
         "phone"=>["string","max:50"],
         "CV"=>["string"],
-        "gitHub"=>["url"],
-        "role_id"=>["required","numeric"],
+        "gitHub"=>["string"],
+        "role_id"=>["numeric"],
         "mentor_id"=>["numeric"],
         "group_id"=>["numeric"],
         "assignment_id"=>["numeric"],
@@ -70,9 +72,11 @@ public function update(Request $request, Intern $intern ){
 
         ],422);
     }
-
     $intern->update($attributes);
-    return response()->json($intern,200);
+    return response()->json([
+        "status"=>200,
+        "data"=>"$intern"
+    ],200);
 }
 public function destroy( Intern $intern){
     $intern->delete();

@@ -15,9 +15,9 @@ class CreateAssignmentsTable extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->string("title");
+            $table->string("title")->unique();
             $table->text("description");
-            $table->foreignId("group_id")->nullable()->constrained()->cascadeOnUpdate()->cascadeOnUpdate();
+            $table->foreignId("group_id")->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamp("start_at")->nullable();
             $table->timestamp("end_at")->nullable();
             $table->timestamps();
