@@ -49,10 +49,11 @@ class EvaluationController extends Controller
             ],401);
         }
         $attributes = $request->validate([
-            "intern_id"=>["required","numeric"],
+            "intern_id"=>["required","numeric",],
             "assignment_id"=>["required","numeric"],
             "pro"=>["required","string"],
             "con"=>["required","string"],
+            "evaluation_day"=>["required","date"],
             "mentor_id"=>["required","numeric"]
         ]);
         if(!$attributes){
