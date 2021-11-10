@@ -8,13 +8,39 @@ use Illuminate\Http\Request;
 
 class AssignmentController extends Controller
 {
-    public function index(){
-        return response()->json(Assignment::get(),200);
+    public function index(Request $request){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
+        $assignment=Assignment::all();
+        return response()->json([
+            "status"=>200,
+            "data"=>$assignment
+        ],200);
     }
-    public function show($id,Assignment $assignment){
-            return response()->json(Assignment::find($id),200);
+    public function show($id,Request $request){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
+        $assignment=Assignment::find($id);
+        return response()->json([
+            "status"=>200,
+            "data"=>$assignment
+        ],200);
     }
     public function store(Request $request ){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
         $attributes = $request->validate([
             "title"=>["string","max:255"],
             "description"=>["string"],
@@ -28,14 +54,22 @@ class AssignmentController extends Controller
                 "message"=>"Unprocessable Entity"
             ],422);
         }
-
-            $assignment= Assignment::create($attributes);
-            return response()->json($assignment,200);
+        $assignment= Assignment::create($attributes);
+        return response()->json([
+            "status"=>201,
+            "data"=>$assignment
+        ],201);
     }
     public function update(Request $request, Assignment $assignment ){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
         $attributes = $request->validate([
-            "title"=>["string","max:255","alpha",],
-            "description"=>["string","alpha_num"],
+            "title"=>["string","max:255"],
+            "description"=>["string"],
             "group_id"=>["numeric"],
             "start_at"=>["date"],
             "end_at"=>["date"]
@@ -47,10 +81,22 @@ class AssignmentController extends Controller
             ],422);
         }
         $assignment->update($attributes);
-        return response()->json($assignment,200);
+        return response()->json([
+            "status"=>200,
+            "data"=>$assignment
+        ],200);
     }
-    public function destroy( Assignment $assignment){
+    public function destroy( Assignment $assignment,Request $request){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
         $assignment->delete();
-        return response()->json(null, 204);
+        return response()->json([
+            "status"=>200,
+            "message"=>"Assignment is deleted"
+        ],200);
     }
 }

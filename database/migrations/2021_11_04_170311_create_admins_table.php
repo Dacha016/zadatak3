@@ -19,7 +19,7 @@ class CreateAdminsTable extends Migration
             $table->string('surname');
             $table->string('email')->unique();
             $table->string('password');
-            $table->foreignId("role_id")->constrained()->cascadeOnDelete();
+            $table->foreignId("role_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

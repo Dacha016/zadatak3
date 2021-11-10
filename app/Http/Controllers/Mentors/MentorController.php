@@ -6,24 +6,44 @@ use App\Http\Controllers\Controller;
 use App\Models\Mentor;
 use Illuminate\Http\Request;
 
-
 class MentorController extends Controller
 {
-
-    public function index(){
-            return response()->json(Mentor::get(),200);
+    public function index(Request $request){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
+        $mentor=Mentor::all();
+        return response()->json([
+            "status"=>200,
+            "data"=>$mentor
+        ],200);
     }
-    public function show($id,Mentor $mentor){
+    public function show($id,Mentor $mentor, Request $request){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
         $mentor=Mentor::leftjoin("groups","groups.id","=","mentors.group_id")
-        ->rightjoin("interns","interns.mentor_id","=","mentors.id")
+        ->leftjoin("interns","interns.mentor_id","=","mentors.id")
         ->where("mentors.id","$id")
         ->get(["mentors.name","mentors.surname","mentors.city","mentors.skype","interns.name as intern_name","interns.surname as intern_surname","groups.title as group_title"]);
         return response()->json([
             "status"=>200,
-            "data"=>"$mentor"
+            "data"=>$mentor
         ],200);
     }
     public function store(Request $request ){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
         $attributes = $request->validate([
             "name"=>["string","max:255"],
             "surname"=>["string","max:255"],
@@ -38,19 +58,27 @@ class MentorController extends Controller
             return response()->json([
                 "status"=>422,
                 "message"=>"Unprocessable Entity"
-
             ],422);
         }
-
-            $mentor= Mentor::create($attributes);
-            return response()->json($mentor,200);
+        $attributes["password"]=bcrypt($attributes["password"]);
+        $mentor= Mentor::create($attributes);
+        return response()->json([
+            "status"=>201,
+            "data"=>$mentor
+        ],201);
     }
     public function update(Request $request, Mentor $mentor ){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
         $attributes = $request->validate([
-            "name"=>["string","max:255","alpha"],
-            "surname"=>["string","max:255","alpha"],
-            "city"=>["string","max:255","alpha"],
-            "skype"=>["string","max:255","alpha_num"],
+            "name"=>["string","max:255"],
+            "surname"=>["string","max:255"],
+            "city"=>["string","max:255"],
+            "skype"=>["string","max:255"],
             "email"=>["max:255","email"],
             "password"=>["min:6","string"],
             "role_id"=>["numeric"],
@@ -60,18 +88,33 @@ class MentorController extends Controller
             return response()->json([
                 "status"=>422,
                 "message"=>"Unprocessable Entity"
-
             ],422);
         }
-
+        if(!$request->exists('password')){
+            $mentor->update($attributes);
+            return response()->json([
+                "status"=>200,
+                "data"=>$mentor
+            ],200);
+        }
+        $attributes["password"]=bcrypt($attributes["password"]);
         $mentor->update($attributes);
         return response()->json([
             "status"=>200,
-            "data"=>"$mentor"
+            "data"=>$mentor
         ],200);
     }
-    public function destroy( Mentor $mentor){
+    public function destroy( Mentor $mentor, Request $request){
+        if(!$request->header('Authorization')){
+            return response()->json([
+                "status"=>401,
+                "message"=>"Unauthorized"
+            ],401);
+        }
         $mentor->delete();
-        return response()->json(null, 204);
+        return response()->json([
+            "status"=>200,
+            "message"=>"Mentor is deleted"
+        ],200);
     }
 }

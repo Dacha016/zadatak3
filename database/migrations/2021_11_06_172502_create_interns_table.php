@@ -23,10 +23,10 @@ class CreateInternsTable extends Migration
             $table->string('phone')->nullable();
             $table->text("CV")->nullable();
             $table->string("gitHub")->nullable();
-            $table->foreignId("role_id")->constrained()->cascadeOnDelete();
-            $table->foreignId("mentor_id")->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId("group_id")->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId("assignment_id")->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId("role_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("mentor_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("group_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("assignment_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

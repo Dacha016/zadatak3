@@ -26,20 +26,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-// Recruiter-Admin
-        Gate::define('show', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
-        Gate::define('create', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
-        Gate::define('update', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
-        Gate::define('delete', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
-// Admins
-        Gate::define('show-admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
-        Gate::define('create-admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
-        Gate::define('update-admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
-        Gate::define('delete-admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
-//All
-        Gate::define('show-all', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
-        Gate::define('create-all', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
-        Gate::define('update-all', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
-        Gate::define('delete-all', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
+    // Admins
+        Gate::define('admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
+
+    // Recruiter-Admin
+        Gate::define('admin-recruiter', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
+
+    //All
+        Gate::define('admin-recruiter-mentor', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
     }
 }
