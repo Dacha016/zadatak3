@@ -29,6 +29,12 @@ class RecruiterController extends Controller
             ],401);
         }
         $recruiter=Recruiter::find($id);
+        if(!$recruiter){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
         return response()->json([
             "status"=>200,
             "data"=>$recruiter
@@ -85,12 +91,18 @@ class RecruiterController extends Controller
             "email"=>["max:255","email"],
             "password"=>["min:6","string"]
         ]);
-        $user=Recruiter::where("email",$attributes["email"])->first();
-        if($user){
+        $recruiter=Recruiter::where("email",$attributes["email"])->first();
+        if($recruiter){
             return response()->json([
                 "status"=>403,
                 "message"=>"Already exists"
             ],403);
+        }
+        if(!$recruiter){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         if(!$attributes){
             return response()->json([
@@ -119,6 +131,12 @@ class RecruiterController extends Controller
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
+        }
+        if(!$recruiter){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         $recruiter->delete();
         return response()->json([
