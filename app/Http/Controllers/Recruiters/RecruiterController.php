@@ -47,16 +47,23 @@ class RecruiterController extends Controller
             "city"=>["string","max:255"],
             "skype"=>["string","max:255"],
             "email"=>["required","max:255","email"],
-            "password"=>["required","min:6","string"],
-            "role_id"=>["required","numeric"]
+            "password"=>["required","min:6","string"]
         ]);
-        $attributes["password"]=bcrypt($attributes["password"]);
+        $user=Recruiter::where("email",$attributes["email"])->first();
+        if($user){
+            return response()->json([
+                "status"=>403,
+                "message"=>"Already exists"
+            ],403);
+        }
         if(!$attributes){
             return response()->json([
                 "status"=>422,
                 "message"=>"Unprocessable Entity"
             ],422);
         }
+        $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["role_id"]=2;
         $recruiter= Recruiter::create($attributes);
         return response()->json([
             "status"=>201,
@@ -76,9 +83,15 @@ class RecruiterController extends Controller
             "city"=>["string","max:255",],
             "skype"=>["string","max:255"],
             "email"=>["max:255","email"],
-            "password"=>["min:6","string"],
-            "role_id"=>["numeric"]
+            "password"=>["min:6","string"]
         ]);
+        $user=Recruiter::where("email",$attributes["email"])->first();
+        if($user){
+            return response()->json([
+                "status"=>403,
+                "message"=>"Already exists"
+            ],403);
+        }
         if(!$attributes){
             return response()->json([
                 "status"=>422,
@@ -93,6 +106,7 @@ class RecruiterController extends Controller
             ],200);
         }
         $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["role_id"]=2;
         $recruiter->update($attributes);
         return response()->json([
             "status"=>201,

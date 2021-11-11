@@ -20,7 +20,7 @@ class InternController extends Controller
             "status"=>200,
             "data"=>$intern
         ],200);
-}
+    }
     public function show($id,Intern $intern, Request $request){
         if(!$request->header('Authorization')){
             return response()->json([
@@ -53,11 +53,17 @@ class InternController extends Controller
             "phone"=>["string","max:50"],
             "CV"=>["string"],
             "gitHub"=>["url"],
-            "role_id"=>["required","numeric"],
             "mentor_id"=>["numeric"],
             "group_id"=>["numeric"],
             "assignment_id"=>["numeric"],
         ]);
+        $user=Intern::where("email",$attributes["email"])->first();
+        if($user){
+            return response()->json([
+                "status"=>403,
+                "message"=>"Already exists"
+            ],403);
+        }
         if(!$attributes){
             return response()->json([
                 "status"=>422,
@@ -65,11 +71,12 @@ class InternController extends Controller
 
             ],422);
         }
-            $intern= Intern::create($attributes);
-            return response()->json([
-                "status"=>201,
-                "data"=>$intern
-            ],201);
+        $attributes["role_id"]=4;
+        $intern= Intern::create($attributes);
+        return response()->json([
+            "status"=>201,
+            "data"=>$intern
+        ],201);
     }
     public function update(Request $request, Intern $intern ){
         if(!$request->header('Authorization')){
@@ -87,11 +94,18 @@ class InternController extends Controller
             "phone"=>["string","max:50"],
             "CV"=>["string"],
             "gitHub"=>["string"],
-            "role_id"=>["numeric"],
             "mentor_id"=>["numeric"],
             "group_id"=>["numeric"],
             "assignment_id"=>["numeric"],
         ]);
+        $attributes["role_id"]=4;
+        $user=Intern::where("email",$attributes["email"])->first();
+        if($user){
+            return response()->json([
+                "status"=>403,
+                "message"=>"Already exists"
+            ],403);
+        }
         if(!$attributes){
             return response()->json([
                 "status"=>422,

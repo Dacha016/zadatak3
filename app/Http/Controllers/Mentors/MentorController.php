@@ -45,15 +45,21 @@ class MentorController extends Controller
             ],401);
         }
         $attributes = $request->validate([
-            "name"=>["string","max:255"],
+            "name"=>["string","max:255","alpha"],
             "surname"=>["string","max:255"],
             "city"=>["string","max:255"],
             "skype"=>["string","max:255"],
             "email"=>["required","max:255","email"],
             "password"=>["required","min:6","string"],
-            "role_id"=>["required","numeric"],
             "group_id"=>["numeric"],
         ]);
+        $user=Mentor::where("email",$attributes["email"])->first();
+        if($user){
+            return response()->json([
+                "status"=>403,
+                "message"=>"Already exists"
+            ],403);
+        }
         if(!$attributes){
             return response()->json([
                 "status"=>422,
@@ -61,6 +67,7 @@ class MentorController extends Controller
             ],422);
         }
         $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["role_id"]=3;
         $mentor= Mentor::create($attributes);
         return response()->json([
             "status"=>201,
@@ -81,9 +88,15 @@ class MentorController extends Controller
             "skype"=>["string","max:255"],
             "email"=>["max:255","email"],
             "password"=>["min:6","string"],
-            "role_id"=>["numeric"],
             "group_id"=>["numeric"],
         ]);
+        $user=Mentor::where("email",$attributes["email"])->first();
+        if($user){
+            return response()->json([
+                "status"=>403,
+                "message"=>"Already exists"
+            ],403);
+        }
         if(!$attributes){
             return response()->json([
                 "status"=>422,
@@ -98,6 +111,7 @@ class MentorController extends Controller
             ],200);
         }
         $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["role_id"]=3;
         $mentor->update($attributes);
         return response()->json([
             "status"=>200,

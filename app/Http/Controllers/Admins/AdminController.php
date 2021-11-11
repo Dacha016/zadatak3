@@ -45,10 +45,17 @@ class AdminController extends Controller
             "name"=>["string","max:255"],
             "surname"=>["string","max:255"],
             "email"=>["required","max:255","email"],
-            "password"=>["required","min:6","string"],
-            "role_id"=>["required","numeric"]
+            "password"=>["required","min:6","string"]
         ]);
+        $user=Admin::where("email",$attributes["email"])->first();
+        if($user){
+            return response()->json([
+                "status"=>403,
+                "message"=>"Already exists"
+            ],403);
+        }
         $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["role_id"]=1;
         if(!$attributes){
             return response()->json([
                 "status"=>422,
@@ -72,9 +79,15 @@ class AdminController extends Controller
             "name"=>["string","max:255"],
             "surname"=>["string","max:255"],
             "email"=>["max:255","email"],
-            "password"=>["min:6","string"],
-            "role_id"=>["numeric"]
+            "password"=>["min:6","string"]
         ]);
+        $user=Admin::where("email",$attributes["email"])->first();
+        if($user){
+            return response()->json([
+                "status"=>403,
+                "message"=>"Already exists"
+            ],403);
+        }
         if(!$attributes){
             return response()->json([
                 "status"=>422,
@@ -89,6 +102,7 @@ class AdminController extends Controller
             ],200);
         }
         $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["role_id"]=1;
         $admin->update($attributes);
         return response()->json([
             "status"=>200,

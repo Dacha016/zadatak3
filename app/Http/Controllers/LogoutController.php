@@ -9,17 +9,13 @@ use Illuminate\Support\Facades\Auth;
 class LogoutController extends Controller
 {
     protected $guarded=[];
-
-
     public function logout(Request $request){
-
         if(!$request->header('Authorization')){
             return response()->json([
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
         }
-
         if(Auth::check()){
             $user=RegisteredUsers::where("email",Auth::user()->email)->first();
             $user->delete();
