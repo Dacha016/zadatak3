@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Interns;
 
 use App\Http\Controllers\Controller;
+use App\Models\Assignment;
+use App\Models\Group;
 use App\Models\Intern;
+use App\Models\Mentor;
 use Illuminate\Http\Request;
 
 class InternController extends Controller
@@ -45,11 +48,32 @@ class InternController extends Controller
         ],200);
     }
     public function store(Request $request ){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
+        if($request->exists("mentor_id")){
+            $mentor= Mentor::find($request["mentor_id"]);
+            if(!$mentor){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined mentor"
+                ],422);
+            }
+        }
+        if($request->exists("group_id")){
+            $group= Group::find($request["group_id"]);
+            if(!$group){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined group"
+                ],422);
+            }
+        }
+        if($request->exists("assignment_id")){
+            $assignment= Assignment::find($request["assignment_id"]);
+            if(!$assignment){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined assignment"
+                ],422);
+            }
         }
         $attributes = $request->validate([
             "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
@@ -86,18 +110,39 @@ class InternController extends Controller
         ],201);
     }
     public function update(Request $request, $id ){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
         $intern=Intern::find($id);
         if(!$intern){
             return response()->json([
                 "status"=>404,
                 "message"=>"Not Found"
             ],404);
+        }
+        if($request->exists("mentor_id")){
+            $mentor= Mentor::find($request["mentor_id"]);
+            if(!$mentor){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined mentor"
+                ],422);
+            }
+        }
+        if($request->exists("group_id")){
+            $group= Group::find($request["group_id"]);
+            if(!$group){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined group"
+                ],422);
+            }
+        }
+        if($request->exists("assignment_id")){
+            $assignment= Assignment::find($request["assignment_id"]);
+            if(!$assignment){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined assignment"
+                ],422);
+            }
         }
         $attributes = $request->validate([
             "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],

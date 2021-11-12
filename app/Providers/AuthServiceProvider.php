@@ -27,7 +27,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
     // Admins
-        Gate::define('admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
+         Gate::define('admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
+
 
     // Recruiter-Admin
         Gate::define('admin-recruiter', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));

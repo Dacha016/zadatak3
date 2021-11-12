@@ -10,13 +10,7 @@ use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    public function index(Request $request){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
+    public function index(){
         $data= Group::leftjoin("interns","groups.id","=","interns.group_id")
             ->leftjoin("mentors","groups.id","=","mentors.group_id")
             ->leftjoin("assignments","groups.id","=","assignments.group_id")
@@ -32,13 +26,7 @@ class GroupController extends Controller
             "data"=>"$group"
         ],200);
     }
-    public function show($id,Group $group,Request $request){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
+    public function show($id){
         $group=Group::find($id);
         if(!$group){
             return response()->json([
@@ -63,15 +51,9 @@ class GroupController extends Controller
         ],200);
     }
     public function store(Request $request ){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
         $attributes = $request->validate([
             "title"=>["string","max:255"],
-            "activated"=>["numeric"]
+            "activated"=>["boolean"]
         ]);
         if(!$attributes){
             return response()->json([
@@ -86,12 +68,6 @@ class GroupController extends Controller
         ],200);
     }
     public function update(Request $request, $id ){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
         $group=Group::find($id);
         if(!$group){
             return response()->json([
@@ -115,13 +91,7 @@ class GroupController extends Controller
             "data"=>$group
         ],200);
     }
-    public function destroy( Request $request,$id){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
+    public function destroy($id){
         $group=Group::find($id);
         if(!$group){
             return response()->json([

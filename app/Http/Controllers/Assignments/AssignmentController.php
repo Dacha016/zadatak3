@@ -4,30 +4,19 @@ namespace App\Http\Controllers\Assignments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
+use App\Models\Group;
 use Illuminate\Http\Request;
 
 class AssignmentController extends Controller
 {
-    public function index(Request $request){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
+    public function index(){
         $assignment=Assignment::all();
         return response()->json([
             "status"=>200,
             "data"=>$assignment
         ],200);
     }
-    public function show($id,Request $request){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
+    public function show($id){
         $assignment=Assignment::find($id);
         if(!$assignment){
             return response()->json([
@@ -41,11 +30,14 @@ class AssignmentController extends Controller
         ],200);
     }
     public function store(Request $request ){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
+        if($request->exists("group_id")){
+            $group= Group::find($request["group_id"]);
+            if(!$group){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined group"
+                ],422);
+            }
         }
         $attributes = $request->validate([
             "title"=>["string","max:255"],
@@ -67,18 +59,21 @@ class AssignmentController extends Controller
         ],201);
     }
     public function update(Request $request, $id ){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
         $assignment=Assignment::find($id);
         if(!$assignment){
             return response()->json([
                 "status"=>404,
                 "message"=>"Not Found"
             ],404);
+        }
+        if($request->exists("group_id")){
+            $group= Group::find($request["group_id"]);
+            if(!$group){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined group"
+                ],422);
+            }
         }
         $attributes = $request->validate([
             "title"=>["string","max:255"],
@@ -87,6 +82,7 @@ class AssignmentController extends Controller
             "start_at"=>["date"],
             "end_at"=>["date"]
         ]);
+
         if(!$attributes){
             return response()->json([
                 "status"=>422,
@@ -99,13 +95,7 @@ class AssignmentController extends Controller
             "data"=>$assignment
         ],200);
     }
-    public function destroy( Request $request,$id){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
+    public function destroy($id){
         $assignment=Assignment::find($id);
         if(!$assignment){
             return response()->json([

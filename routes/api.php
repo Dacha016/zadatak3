@@ -32,53 +32,53 @@ Route::get("evaluations/list",[EvaluationController::class, "index"]);
 //protected
 Route::group(['middleware' => 'auth:sanctum'],function(){
     Route::group(['prefix' => 'admins'],function(){
-        Route::post("/create",[AdminController::class, "store"])->middleware("can:admin");
-        Route::get("/list",[AdminController::class, "index"])->middleware("can:admin");
-        Route::get("/{id}",[AdminController::class, "show"])->middleware("can:admin");
-        Route::put("/{admin}",[AdminController::class, "update"])->middleware("can:admin");
-        Route::delete("/{admin}",[AdminController::class, "destroy"])->middleware("can:admin");
-        Route::post("/logout",[LogoutController::class, "logout"])->middleware("can:admin");
+        Route::post("/create",[AdminController::class, "store"]);
+        Route::get("/list",[AdminController::class, "index"]);
+        Route::get("/{id}",[AdminController::class, "show"]);
+        Route::put("/{admin}",[AdminController::class, "update"]);
+        Route::delete("/{admin}",[AdminController::class, "destroy"]);
+        Route::post("/logout",[LogoutController::class, "logout"]);
 
     });
     Route::group(['prefix' => 'recruiters'],function(){
-        Route::post("/create",[RecruiterController::class, "store"])->middleware("can:admin");
-        Route::get("/list",[RecruiterController::class, "index"])->middleware("can:admin-recruiter");
-        Route::get("/{id}",[RecruiterController::class, "show"])->middleware("can:admin");
-        Route::put("/{recruiter}",[RecruiterController::class, "update"])->middleware("can:admin");
-        Route::delete("/{recruiter}",[RecruiterController::class, "destroy"])->middleware("can:admin");
+        Route::post("/create",[RecruiterController::class, "store"]);
+        Route::get("/list",[RecruiterController::class, "index"]);
+        Route::get("/{id}",[RecruiterController::class, "show"]);
+        Route::put("/{recruiter}",[RecruiterController::class, "update"]);
+        Route::delete("/{recruiter}",[RecruiterController::class, "destroy"]);
         Route::post("/logout",[LogoutController::class, "logout"]);
 
     });
     Route::group(['prefix' => 'mentors'],function(){
-        Route::post("/create",[MentorController::class, "store"])->middleware("can:admin-recruiter");
-        Route::get("/list",[MentorController::class, "index"])->middleware("can:admin-recruiter-mentor");
-        Route::get("/{id}",[MentorController::class, "show"])->middleware("can:admin-recruiter");  //  mozda bo trebalo profile
-        Route::put("/{mentor}",[MentorController::class, "update"])->middleware("can:admin-recruiter");
-        Route::delete("/{mentor}",[MentorController::class, "destroy"])->middleware("can:admin-recruiter");
+        Route::post("/create",[MentorController::class, "store"]);
+        Route::get("/list",[MentorController::class, "index"]);
+        Route::get("/{id}",[MentorController::class, "show"]);
+        Route::put("/{mentor}",[MentorController::class, "update"]);
+        Route::delete("/{mentor}",[MentorController::class, "destroy"]);
         Route::post("/logout",[LogoutController::class, "logout"]);
 
     });
     Route::group(['prefix' => 'groups'],function(){
-        Route::post("/create",[GroupController::class, "store"])->middleware("can:admin-recruiter-mentor");
-        Route::get("/list",[GroupController::class, "index"])->middleware("can:admin-recruiter-mentor");
-        Route::get("/{id}",[GroupController::class, "show"])->middleware("can:admin-recruiter-mentor");
-        Route::put("/{group}",[GroupController::class, "update"])->middleware("can:admin-recruiter-mentor");
-        Route::delete("/{group}",[GroupController::class, "destroy"])->middleware("can:admin-recruiter-mentor");
+        Route::post("/create",[GroupController::class, "store"]);
+        Route::get("/list",[GroupController::class, "index"]);
+        Route::get("/{id}",[GroupController::class, "show"]);
+        Route::put("/{group}",[GroupController::class, "update"]);
+        Route::delete("/{group}",[GroupController::class, "destroy"]);
     });
     Route::group(['prefix' => 'assignments'],function(){
-        Route::post("/create",[AssignmentController::class, "store"])->middleware("can:admin-recruiter-mentor");
-        Route::get("/list",[AssignmentController::class, "index"])->middleware("can:admin-recruiter-mentor");
-        Route::get("/{id}",[AssignmentController::class, "show"])->middleware("can:admin-recruiter-mentor");
-        Route::put("/{assignment}",[AssignmentController::class, "update"])->middleware("can:admin-recruiter-mentor");
-        Route::delete("/{assignment}",[AssignmentController::class, "destroy"])->middleware("can:admin-recruiter-mentor");
+        Route::post("/create",[AssignmentController::class, "store"]);
+        Route::get("/list",[AssignmentController::class, "index"]);
+        Route::get("/{id}",[AssignmentController::class, "show"]);
+        Route::put("/{assignment}",[AssignmentController::class, "update"]);
+        Route::delete("/{assignment}",[AssignmentController::class, "destroy"]);
     });
     Route::group(['prefix' => 'interns'],function(){
-        Route::post("/create",[InternController::class, "store"])->middleware("can:admin-recruiter-mentor");
-        Route::put("/{intern}",[InternController::class, "update"])->middleware("can:admin-recruiter-mentor");
-        Route::delete("/{intern}",[InternController::class, "destroy"])->middleware("can:admin-recruiter-mentor");
+        Route::post("/create",[InternController::class, "store"]);
+        Route::put("/{intern}",[InternController::class, "update"]);
+        Route::delete("/{intern}",[InternController::class, "destroy"]);
     });
     Route::group(['prefix' => 'evaluations'],function(){
-        Route::post("/create",[EvaluationController::class, "store"])->middleware("can:admin-recruiter-mentor");
+        Route::post("/create",[EvaluationController::class, "store"]);
     });
 });
 
