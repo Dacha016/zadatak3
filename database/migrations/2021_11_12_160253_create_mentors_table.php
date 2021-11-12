@@ -15,14 +15,13 @@ class CreateMentorsTable extends Migration
     {
         Schema::create('mentors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string("name");
             $table->string('surname');
             $table->string('city')->nullable();
             $table->string('skype')->nullable();
             $table->string('email')->nullable()->unique();
             $table->string('password')->nullable();
             $table->foreignId("role_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId("group_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

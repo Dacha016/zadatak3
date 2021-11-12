@@ -24,9 +24,6 @@ class CreateInternsTable extends Migration
             $table->text("CV")->nullable();
             $table->string("gitHub")->nullable();
             $table->foreignId("role_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId("mentor_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId("group_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId("assignment_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

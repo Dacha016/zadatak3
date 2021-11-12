@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Assignments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
-use App\Models\Group;
 use Illuminate\Http\Request;
 
 class AssignmentController extends Controller
@@ -30,21 +29,9 @@ class AssignmentController extends Controller
         ],200);
     }
     public function store(Request $request ){
-        if($request->exists("group_id")){
-            $group= Group::find($request["group_id"]);
-            if(!$group){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined group"
-                ],422);
-            }
-        }
         $attributes = $request->validate([
             "title"=>["string","max:255"],
-            "description"=>["string"],
-            "group_id"=>["numeric"],
-            "start_at"=>["date"],
-            "end_at"=>["date"]
+            "description"=>["string"]
         ]);
         if(!$attributes){
             return response()->json([
@@ -66,23 +53,11 @@ class AssignmentController extends Controller
                 "message"=>"Not Found"
             ],404);
         }
-        if($request->exists("group_id")){
-            $group= Group::find($request["group_id"]);
-            if(!$group){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined group"
-                ],422);
-            }
-        }
         $attributes = $request->validate([
             "title"=>["string","max:255"],
             "description"=>["string"],
-            "group_id"=>["numeric"],
-            "start_at"=>["date"],
-            "end_at"=>["date"]
-        ]);
 
+        ]);
         if(!$attributes){
             return response()->json([
                 "status"=>422,

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admins\AdminController;
 use App\Http\Controllers\Assignments\AssignmentController;
+use App\Http\Controllers\DataController;
 use App\Http\Controllers\Evaluations\EvaluationController;
 use App\Http\Controllers\Groups\GroupController;
 use App\Http\Controllers\Interns\InternController;
@@ -27,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 Route::post("/login",[LoginController::class,"login"]);
 Route::get("interns/list",[InternController::class, "index"]);
 Route::get("interns/{id}",[InternController::class, "show"]);
+Route::get("interns/profile/{id}",[InternController::class, "profile"]);
 Route::get("evaluations/interns/{id}",[EvaluationController::class, "show"]);
 Route::get("evaluations/list",[EvaluationController::class, "index"]);
 //protected
@@ -60,9 +62,9 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
     });
     Route::group(['prefix' => 'groups'],function(){
         Route::post("/create",[GroupController::class, "store"]);
-        Route::get("/list",[GroupController::class, "index"]);
-        Route::get("/{group:id}/{assignment:id}",[GroupController::class, "show"]);
-        Route::put("/{group}/{assignment:id}",[GroupController::class, "update"]);
+        Route::get("/list",[GroupController::class, "indexInfo"]);
+        Route::get("/{group}",[GroupController::class, "showInfo"]);
+        Route::put("/{group}",[GroupController::class, "update"]);
         Route::delete("/{group}",[GroupController::class, "destroy"]);
     });
     Route::group(['prefix' => 'assignments'],function(){
@@ -79,6 +81,11 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
     });
     Route::group(['prefix' => 'evaluations'],function(){
         Route::post("/create",[EvaluationController::class, "store"]);
+    });
+    Route::group(['prefix' => 'data'],function(){
+        Route::post("/create",[DataController::class, "store"]);
+        Route::put("/{intern}",[DataController::class, "update"]);
+        Route::delete("/{intern}",[DataController::class, "destroy"]);
     });
 });
 

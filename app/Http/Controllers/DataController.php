@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Assignment;
+use App\Models\Data;
+use App\Models\Group;
+use App\Models\Intern;
+use App\Models\Mentor;
+use Illuminate\Http\Request;
+
+class DataController extends Controller
+{
+    public function store(Request $request ){
+        if($request->exists("mentor_id")){
+            $mentor= Mentor::find($request["mentor_id"]);
+            if(!$mentor){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined mentor"
+                ],422);
+            }
+        }
+        if($request->exists("intern_id")){
+            $intern= Intern::find($request["intern_id"]);
+            if(!$intern){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined intern"
+                ],422);
+            }
+        }
+        if($request->exists("group_id")){
+            $group= Group::find($request["group_id"]);
+            if(!$group){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined group"
+                ],422);
+            }
+        }
+        if($request->exists("assignment_id")){
+            $assignment= Assignment::find($request["assignment_id"]);
+            if(!$assignment){
+                return response()->json([
+                    "status"=>422,
+                    "message"=>"Undefined assignment"
+                ],422);
+            }
+        }
+        $attributes = $request->validate([
+            "intern_id"=>["numeric"],
+            "mentor_id"=>["numeric"],
+            "group_id"=>["numeric"],
+            "activated"=>["boolean"],
+            "assignment_id"=>["numeric"],
+            "start_at"=>["date"],
+            "end_at"=>["date"]
+        ]);
+        if(!$attributes){
+            return response()->json([
+                "status"=>422,
+                "message"=>"Unprocessable Entity"
+            ],422);
+        }
+        if($request["activated"]){
+            $attributes["start_at"] = date('Y-m-d');
+            $attributes["end_at"] = date('Y-m-d', strtotime("+15 days"));
+        }
+        if(!$request["activated"]){
+            $attributes["start_at"] =null;
+            $attributes["end_at"] = null;
+        }
+        $data= Data::create($attributes);
+        return response()->json([
+            "status"=>200,
+            "data"=>$data
+        ],200);
+    }
+    public function update(Request $request, $id ){
+        $data=Data::find($id);
+        if(!$data){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
+        $attributes = $request->validate([
+            "intern_id"=>["numeric"],
+            "mentor_id"=>["numeric"],
+            "group_id"=>["numeric"],
+            "activated"=>["boolean"],
+            "assignment_id"=>["numeric"],
+            "start_at"=>["date"],
+            "end_at"=>["date"]
+        ]);
+        if(!$attributes){
+            return response()->json([
+                "status"=>422,
+                "message"=>"Unprocessable Entity"
+            ],422);
+        }
+        if($request["activated"]){
+            $attributes["start_at"] = date('Y-m-d');
+            $attributes["end_at"] = date('Y-m-d', strtotime("+15 days"));
+        }
+        if(!$request["activated"]){
+            $attributes["start_at"] =null;
+            $attributes["end_at"] = null;
+        }
+        $data->create($attributes);
+        return response()->json([
+            "status"=>200,
+            "data"=>$data
+        ],200);
+    }
+    public function destroy($id){
+        $data=Data::find($id);
+        if(!$data){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
+        $data->delete();
+        return response()->json([
+            "status"=>200,
+            "message"=>"Group is deleted"
+        ],200);
+    }
+}

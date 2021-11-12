@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Interns;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assignment;
+use App\Models\Data;
 use App\Models\Group;
 use App\Models\Intern;
 use App\Models\Mentor;
@@ -11,26 +12,14 @@ use Illuminate\Http\Request;
 
 class InternController extends Controller
 {
-    public function index(Request $request){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
+    public function index(){
         $intern=Intern::all();
         return response()->json([
             "status"=>200,
             "data"=>$intern
         ],200);
     }
-    public function show($id,Intern $intern, Request $request){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
+    public function show($id){
         $intern=Intern::find($id);
         if(!$intern){
             return response()->json([
@@ -38,43 +27,44 @@ class InternController extends Controller
                 "message"=>"Not Found"
             ],404);
         }
-        $intern=Intern::leftjoin("groups","groups.id","=","interns.group_id")
-        ->leftjoin("assignments","assignments.id","=","interns.assignment_id")
-        ->where("interns.id","$id")
-        ->get(["interns.name","interns.surname","interns.city","interns.address","interns.email","interns.phone","interns.CV","interns.gitHub","groups.title as group_title","assignments.title as assignment_title"]);
         return response()->json([
             "status"=>200,
             "data"=>$intern
         ],200);
     }
+    public function profile($id){
+        $data=Data::rightjoin("interns","data.intern_id","=","interns.id")
+            ->where("interns.id",$id)
+            ->select(["interns.name as intern_name","interns.surname as intern_surname","interns.city as intern_city","interns.address as intern_address","interns.email as intern_email","interns.phone as intern_phone","interns.CV as intern_CV","interns.gitHub as intern_gitHub"])
+            ->distinct()
+            ->get();
+        $intern=collect($data)->toArray();
+
+        $data=Data::join("groups","data.group_id","=","groups.id")
+            ->join("interns","data.intern_id","=","interns.id")
+            ->where("interns.id",$id)
+            ->select(["groups.title as group_title"])
+            ->distinct()
+            ->get();
+        $groups=collect($data)->toArray();
+
+        $data=Data::join("assignments","data.assignment_id","=","assignments.id")
+            ->join("interns","data.intern_id","=","interns.id")
+            ->where("interns.id",$id)
+            ->select(["assignments.title as assignment_title","data.start_at","data.end_at"])
+            ->distinct()
+            ->get();
+        $assignments=collect($data)->toArray();
+        return response()->json([
+            "status"=>200,
+            "data"=>[
+                "intern"=>$intern,
+                "groups"=>$groups,
+                "assignments"=>$assignments
+                ]
+        ],200);
+    }
     public function store(Request $request ){
-        if($request->exists("mentor_id")){
-            $mentor= Mentor::find($request["mentor_id"]);
-            if(!$mentor){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined mentor"
-                ],422);
-            }
-        }
-        if($request->exists("group_id")){
-            $group= Group::find($request["group_id"]);
-            if(!$group){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined group"
-                ],422);
-            }
-        }
-        if($request->exists("assignment_id")){
-            $assignment= Assignment::find($request["assignment_id"]);
-            if(!$assignment){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined assignment"
-                ],422);
-            }
-        }
         $attributes = $request->validate([
             "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
             "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
@@ -84,9 +74,6 @@ class InternController extends Controller
             "phone"=>["string","max:50"],
             "CV"=>["string"],
             "gitHub"=>["url"],
-            "mentor_id"=>["numeric"],
-            "group_id"=>["numeric"],
-            "assignment_id"=>["numeric"],
         ]);
         $user=Intern::where("email",$attributes["email"])->first();
         if($user){
@@ -117,33 +104,6 @@ class InternController extends Controller
                 "message"=>"Not Found"
             ],404);
         }
-        if($request->exists("mentor_id")){
-            $mentor= Mentor::find($request["mentor_id"]);
-            if(!$mentor){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined mentor"
-                ],422);
-            }
-        }
-        if($request->exists("group_id")){
-            $group= Group::find($request["group_id"]);
-            if(!$group){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined group"
-                ],422);
-            }
-        }
-        if($request->exists("assignment_id")){
-            $assignment= Assignment::find($request["assignment_id"]);
-            if(!$assignment){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined assignment"
-                ],422);
-            }
-        }
         $attributes = $request->validate([
             "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
             "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
@@ -152,10 +112,7 @@ class InternController extends Controller
             "email"=>["max:255","email"],
             "phone"=>["string","max:50"],
             "CV"=>["string"],
-            "gitHub"=>["string"],
-            "mentor_id"=>["numeric"],
-            "group_id"=>["numeric"],
-            "assignment_id"=>["numeric"],
+            "gitHub"=>["string"]
         ]);
         if(!$attributes){
             return response()->json([
@@ -171,12 +128,6 @@ class InternController extends Controller
         ],200);
     }
     public function destroy( Request $request,$id){
-        if(!$request->header('Authorization')){
-            return response()->json([
-                "status"=>401,
-                "message"=>"Unauthorized"
-            ],401);
-        }
         $intern=Intern::find($id);
         if(!$intern){
             return response()->json([

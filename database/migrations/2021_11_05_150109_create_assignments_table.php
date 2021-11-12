@@ -17,9 +17,6 @@ class CreateAssignmentsTable extends Migration
             $table->id();
             $table->string("title")->unique();
             $table->text("description");
-            $table->foreignId("group_id")->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->timestamp("start_at")->nullable();
-            $table->timestamp("end_at")->nullable();
             $table->timestamps();
         });
     }

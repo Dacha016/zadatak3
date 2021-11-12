@@ -52,15 +52,6 @@ class MentorController extends Controller
     }
     public function store(Request $request ){
         if (Gate::allows('admin-recruiter')) {
-            if($request->exists('group_id')){
-                $group= Group::find($request["group_id"]);
-                if(!$group){
-                    return response()->json([
-                        "status"=>422,
-                        "message"=>"Undefined group"
-                    ],422);
-                }
-            }
             $attributes = $request->validate([
                 "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
                 "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
@@ -68,7 +59,6 @@ class MentorController extends Controller
                 "skype"=>["string","max:255"],
                 "email"=>["required","max:255","email"],
                 "password"=>["required","min:6","string"],
-                "group_id"=>["numeric"],
             ]);
             $user=Mentor::where("email",$attributes["email"])->first();
             if($user){
@@ -105,15 +95,6 @@ class MentorController extends Controller
                     "status"=>404,
                     "message"=>"Not Found"
                 ],404);
-            }
-            if($request->exists('group_id')){
-                $group= Group::find($request["group_id"]);
-                if(!$group){
-                    return response()->json([
-                        "status"=>422,
-                        "message"=>"Undefined group"
-                    ],422);
-                }
             }
             $attributes = $request->validate([
                 "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
