@@ -39,6 +39,13 @@ class GroupController extends Controller
                 "message"=>"Unauthorized"
             ],401);
         }
+        $group=Group::find($id);
+        if(!$group){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
         $data= Group::leftjoin("interns","groups.id","=","interns.group_id")
             ->leftjoin("mentors","groups.id","=","mentors.group_id")
             ->leftjoin("assignments","groups.id","=","assignments.group_id")
@@ -78,12 +85,19 @@ class GroupController extends Controller
             "data"=>$group
         ],200);
     }
-    public function update(Request $request, Group $group ){
+    public function update(Request $request, $id ){
         if(!$request->header('Authorization')){
             return response()->json([
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
+        }
+        $group=Group::find($id);
+        if(!$group){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         $attributes = $request->validate([
             "title"=>["string","max:255"],
@@ -101,12 +115,19 @@ class GroupController extends Controller
             "data"=>$group
         ],200);
     }
-    public function destroy( Group $group, Request $request){
+    public function destroy( Request $request,$id){
         if(!$request->header('Authorization')){
             return response()->json([
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
+        }
+        $group=Group::find($id);
+        if(!$group){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         $group->delete();
         return response()->json([

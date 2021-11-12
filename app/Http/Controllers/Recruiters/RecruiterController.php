@@ -49,9 +49,9 @@ class RecruiterController extends Controller
             ],401);
         }
         $attributes = $request->validate([
-            "name"=>["string","max:255"],
-            "surname"=>["string","max:255"],
-            "city"=>["string","max:255"],
+            "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
             "skype"=>["string","max:255"],
             "email"=>["required","max:255","email"],
             "password"=>["required","min:6","string"]
@@ -77,28 +77,28 @@ class RecruiterController extends Controller
             "data"=>$recruiter
         ],201);
     }
-    public function update(Request $request, Recruiter $recruiter ){
+    public function update(Request $request, $id ){
         if(!$request->header('Authorization')){
             return response()->json([
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
         }
+        $recruiter=Recruiter::find($id);
+        if(!$recruiter){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
         $attributes = $request->validate([
-            "name"=>["string","max:255",],
-            "surname"=>["string","max:255",],
-            "city"=>["string","max:255",],
+            "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
             "skype"=>["string","max:255"],
             "email"=>["max:255","email"],
             "password"=>["min:6","string"]
         ]);
-        $recruiter=Recruiter::where("email",$attributes["email"])->first();
-        if($recruiter){
-            return response()->json([
-                "status"=>403,
-                "message"=>"Already exists"
-            ],403);
-        }
         if(!$recruiter){
             return response()->json([
                 "status"=>404,
@@ -126,12 +126,19 @@ class RecruiterController extends Controller
             "data"=>$recruiter
         ],201);
     }
-    public function destroy( Recruiter $recruiter, Request $request){
+    public function destroy( Request $request, $id){
         if(!$request->header('Authorization')){
             return response()->json([
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
+        }
+        $recruiter=Recruiter::find($id);
+        if(!$recruiter){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         if(!$recruiter){
             return response()->json([

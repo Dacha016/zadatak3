@@ -29,6 +29,12 @@ class AssignmentController extends Controller
             ],401);
         }
         $assignment=Assignment::find($id);
+        if(!$assignment){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
         return response()->json([
             "status"=>200,
             "data"=>$assignment
@@ -60,12 +66,19 @@ class AssignmentController extends Controller
             "data"=>$assignment
         ],201);
     }
-    public function update(Request $request, Assignment $assignment ){
+    public function update(Request $request, $id ){
         if(!$request->header('Authorization')){
             return response()->json([
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
+        }
+        $assignment=Assignment::find($id);
+        if(!$assignment){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         $attributes = $request->validate([
             "title"=>["string","max:255"],
@@ -86,12 +99,19 @@ class AssignmentController extends Controller
             "data"=>$assignment
         ],200);
     }
-    public function destroy( Assignment $assignment,Request $request){
+    public function destroy( Request $request,$id){
         if(!$request->header('Authorization')){
             return response()->json([
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
+        }
+        $assignment=Assignment::find($id);
+        if(!$assignment){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         $assignment->delete();
         return response()->json([

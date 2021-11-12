@@ -28,6 +28,13 @@ class InternController extends Controller
                 "message"=>"Unauthorized"
             ],401);
         }
+        $intern=Intern::find($id);
+        if(!$intern){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
         $intern=Intern::leftjoin("groups","groups.id","=","interns.group_id")
         ->leftjoin("assignments","assignments.id","=","interns.assignment_id")
         ->where("interns.id","$id")
@@ -45,9 +52,9 @@ class InternController extends Controller
             ],401);
         }
         $attributes = $request->validate([
-            "name"=>["string","max:255"],
-            "surname"=>["string","max:255"],
-            "city"=>["string","max:255"],
+            "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
             "adderss"=>["string","max:255"],
             "email"=>["required","max:255","email"],
             "phone"=>["string","max:50"],
@@ -78,17 +85,24 @@ class InternController extends Controller
             "data"=>$intern
         ],201);
     }
-    public function update(Request $request, Intern $intern ){
+    public function update(Request $request, $id ){
         if(!$request->header('Authorization')){
             return response()->json([
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
         }
+        $intern=Intern::find($id);
+        if(!$intern){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
         $attributes = $request->validate([
-            "name"=>["string","max:255"],
-            "surname"=>["string","max:255"],
-            "city"=>["string","max:255"],
+            "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
             "adderss"=>["string","max:255"],
             "email"=>["max:255","email"],
             "phone"=>["string","max:50"],
@@ -98,32 +112,32 @@ class InternController extends Controller
             "group_id"=>["numeric"],
             "assignment_id"=>["numeric"],
         ]);
-        $attributes["role_id"]=4;
-        $user=Intern::where("email",$attributes["email"])->first();
-        if($user){
-            return response()->json([
-                "status"=>403,
-                "message"=>"Already exists"
-            ],403);
-        }
         if(!$attributes){
             return response()->json([
                 "status"=>422,
                 "message"=>"Unprocessable Entity"
             ],422);
         }
+        $attributes["role_id"]=4;
         $intern->update($attributes);
         return response()->json([
             "status"=>200,
             "data"=>"$intern"
         ],200);
     }
-    public function destroy( Intern $intern, Request $request){
+    public function destroy( Request $request,$id){
         if(!$request->header('Authorization')){
             return response()->json([
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
+        }
+        $intern=Intern::find($id);
+        if(!$intern){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         $intern->delete();
         return response()->json([
