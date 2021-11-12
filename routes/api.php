@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 
 // public
-Route::post("/login",[LoginController::class,"login"])->middleware("guest");
+Route::post("/login",[LoginController::class,"login"]);
 Route::get("interns/list",[InternController::class, "index"]);
 Route::get("interns/{id}",[InternController::class, "show"]);
 Route::get("evaluations/interns/{id}",[EvaluationController::class, "show"]);
@@ -61,8 +61,8 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
     Route::group(['prefix' => 'groups'],function(){
         Route::post("/create",[GroupController::class, "store"]);
         Route::get("/list",[GroupController::class, "index"]);
-        Route::get("/{id}",[GroupController::class, "show"]);
-        Route::put("/{group}",[GroupController::class, "update"]);
+        Route::get("/{group:id}/{assignment:id}",[GroupController::class, "show"]);
+        Route::put("/{group}/{assignment:id}",[GroupController::class, "update"]);
         Route::delete("/{group}",[GroupController::class, "destroy"]);
     });
     Route::group(['prefix' => 'assignments'],function(){
