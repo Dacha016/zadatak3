@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Interns;
 
 use App\Http\Controllers\Controller;
-use App\Models\Assignment;
 use App\Models\Data;
-use App\Models\Group;
 use App\Models\Intern;
-use App\Models\Mentor;
 use Illuminate\Http\Request;
 
 class InternController extends Controller

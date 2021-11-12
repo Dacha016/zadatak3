@@ -83,6 +83,7 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
     });
     Route::group(['prefix' => 'evaluations'],function(){
         Route::post("/create",[EvaluationController::class, "store"]);
+        Route::delete("/{evaluation}",[EvaluationController::class, "destroy"]);
     });
     Route::group(['prefix' => 'data'],function(){
         Route::post("/create",[DataController::class, "store"]);

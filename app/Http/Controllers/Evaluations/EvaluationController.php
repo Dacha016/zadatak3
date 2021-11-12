@@ -82,7 +82,7 @@ class EvaluationController extends Controller
         ],201);
     }
     public function destroy($id){
-        if (Gate::allows('admin-recruiter')) {
+        if (Gate::allows('admin')) {
             $evaluation=Evaluation::find($id);
             if(!$evaluation){
                 return response()->json([

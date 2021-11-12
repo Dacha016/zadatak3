@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Mentors;
 
 use App\Http\Controllers\Controller;
 use App\Models\Data;
-use App\Models\Group;
 use App\Models\Mentor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
