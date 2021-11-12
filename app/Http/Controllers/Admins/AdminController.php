@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admins;
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -29,6 +30,12 @@ class AdminController extends Controller
             ],401);
         }
         $admin=Admin::find($id);
+        if(!$admin){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
         return response()->json([
             "status"=>200,
             "data"=>$admin
@@ -47,14 +54,14 @@ class AdminController extends Controller
             "email"=>["required","max:255","email"],
             "password"=>["required","min:6","string"]
         ]);
-        $user=Admin::where("email",$attributes["email"])->first();
-        if($user){
+        $admin=Admin::where("email",$attributes["email"])->first();
+        if($admin){
             return response()->json([
                 "status"=>403,
                 "message"=>"Already exists"
             ],403);
         }
-        $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["password"]=Hash::make($attributes["password"]);
         $attributes["role_id"]=1;
         if(!$attributes){
             return response()->json([
@@ -81,12 +88,18 @@ class AdminController extends Controller
             "email"=>["max:255","email"],
             "password"=>["min:6","string"]
         ]);
-        $user=Admin::where("email",$attributes["email"])->first();
-        if($user){
+        $admin=Admin::where("email",$attributes["email"])->first();
+        if($admin){
             return response()->json([
                 "status"=>403,
                 "message"=>"Already exists"
             ],403);
+        }
+        if(!$admin){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         if(!$attributes){
             return response()->json([
@@ -101,7 +114,7 @@ class AdminController extends Controller
                 "data"=>$admin
             ],200);
         }
-        $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["password"]=Hash::make($attributes["password"]);
         $attributes["role_id"]=1;
         $admin->update($attributes);
         return response()->json([
@@ -115,6 +128,12 @@ class AdminController extends Controller
                 "status"=>401,
                 "message"=>"Unauthorized"
             ],401);
+        }
+        if(!$admin){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
         }
         $admin->delete();
         return response()->json([

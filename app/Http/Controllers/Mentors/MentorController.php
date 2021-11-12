@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mentors;
 use App\Http\Controllers\Controller;
 use App\Models\Mentor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class MentorController extends Controller
 {
@@ -66,7 +67,7 @@ class MentorController extends Controller
                 "message"=>"Unprocessable Entity"
             ],422);
         }
-        $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["password"]=Hash::make($attributes["password"]);
         $attributes["role_id"]=3;
         $mentor= Mentor::create($attributes);
         return response()->json([
@@ -110,7 +111,7 @@ class MentorController extends Controller
                 "data"=>$mentor
             ],200);
         }
-        $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["password"]=Hash::make($attributes["password"]);
         $attributes["role_id"]=3;
         $mentor->update($attributes);
         return response()->json([

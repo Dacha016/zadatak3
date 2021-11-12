@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Recruiters;
 use App\Http\Controllers\Controller;
 use App\Models\Recruiter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class RecruiterController extends Controller
 {
@@ -68,7 +69,7 @@ class RecruiterController extends Controller
                 "message"=>"Unprocessable Entity"
             ],422);
         }
-        $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["password"]=Hash::make($attributes["password"]);
         $attributes["role_id"]=2;
         $recruiter= Recruiter::create($attributes);
         return response()->json([
@@ -117,7 +118,7 @@ class RecruiterController extends Controller
                 "data"=>$recruiter
             ],200);
         }
-        $attributes["password"]=bcrypt($attributes["password"]);
+        $attributes["password"]=Hash::make($attributes["password"]);
         $attributes["role_id"]=2;
         $recruiter->update($attributes);
         return response()->json([
