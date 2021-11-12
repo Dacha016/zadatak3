@@ -55,6 +55,7 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
         Route::post("/create",[MentorController::class, "store"]);
         Route::get("/list",[MentorController::class, "index"]);
         Route::get("/{id}",[MentorController::class, "show"]);
+        Route::get("profile/{id}",[MentorController::class, "profile"]);
         Route::put("/{mentor}",[MentorController::class, "update"]);
         Route::delete("/{mentor}",[MentorController::class, "destroy"]);
         Route::post("/logout",[LogoutController::class, "logout"]);
@@ -62,8 +63,9 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
     });
     Route::group(['prefix' => 'groups'],function(){
         Route::post("/create",[GroupController::class, "store"]);
-        Route::get("/list",[GroupController::class, "indexInfo"]);
-        Route::get("/{group}",[GroupController::class, "showInfo"]);
+        Route::get("/list",[GroupController::class, "index"]);
+        Route::get("/{group}",[GroupController::class, "show"]);
+        Route::get("info/{group}",[GroupController::class, "groupInfo"]);
         Route::put("/{group}",[GroupController::class, "update"]);
         Route::delete("/{group}",[GroupController::class, "destroy"]);
     });
