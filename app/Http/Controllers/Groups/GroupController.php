@@ -54,7 +54,6 @@ class GroupController extends Controller
         ->distinct()
         ->get();
         $group=collect($data)->toArray();
-        dd($group);
         if(!$group){
             return response()->json([
                 "status"=>404,
