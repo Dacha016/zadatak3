@@ -12,10 +12,12 @@ class AdminController extends Controller
 {
     public function index(){
         if (Gate::allows('admin')) {
-            $admin=Admin::all();
+            $admins=Admin::all();
             return response()->json([
                 "status"=>200,
-                "data"=>$admin
+                "data"=>[
+                    "admins"=>$admins
+                ]
             ],200);
         } else {
             return response()->json([
@@ -35,7 +37,9 @@ class AdminController extends Controller
             }
             return response()->json([
                 "status"=>200,
-                "data"=>$admin
+                "data"=>[
+                    "admin"=>$admin
+                ]
             ],200);
         } else {
             return response()->json([
@@ -47,8 +51,8 @@ class AdminController extends Controller
     public function store(Request $request ){
         if (Gate::allows('admin')) {
             $attributes = $request->validate([
-                "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+                "name"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
+                "surname"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
                 "email"=>["required","max:255","email","string"],
                 "password"=>["required","min:6","string"]
             ]);
@@ -56,7 +60,7 @@ class AdminController extends Controller
             if($admin){
                 return response()->json([
                     "status"=>403,
-                    "message"=>"Already exists"
+                    "message"=>"Email address already exists"
                 ],403);
             }
             $attributes["password"]=Hash::make($attributes["password"]);
@@ -70,7 +74,9 @@ class AdminController extends Controller
             $admin= Admin::create($attributes);
             return response()->json([
                 "status"=>201,
-                "data"=>$admin
+                "data"=>[
+                    "admin"=>$admin
+                ]
             ],201);
         } else {
             return response()->json([
@@ -104,7 +110,9 @@ class AdminController extends Controller
             $admin->update($attributes);
             return response()->json([
                 "status"=>200,
-                "data"=>$admin
+                "data"=>[
+                    "admin"=>$admin
+                ]
             ],200);
         }
 

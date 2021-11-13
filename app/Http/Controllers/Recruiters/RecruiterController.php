@@ -12,10 +12,12 @@ class RecruiterController extends Controller
 {
     public function index(){
         if (Gate::allows('admin-recruiter')) {
-            $recruiter=Recruiter::all();
+            $recruiters=Recruiter::all();
             return response()->json([
                 "status"=>200,
-                "data"=>$recruiter
+                "data"=>[
+                    "recruiters"=>$recruiters
+                ]
             ],200);
         } else {
             return response()->json([
@@ -36,7 +38,9 @@ class RecruiterController extends Controller
             }
             return response()->json([
                 "status"=>200,
-                "data"=>$recruiter
+                "data"=>[
+                    "recruiter"=>$recruiter
+                ]
             ],200);
         } else {
             return response()->json([
@@ -58,7 +62,7 @@ class RecruiterController extends Controller
             if($user){
                 return response()->json([
                     "status"=>403,
-                    "message"=>"Already exists"
+                    "message"=>"Email address already exists"
                 ],403);
             }
             if(!$attributes){
@@ -72,7 +76,9 @@ class RecruiterController extends Controller
             $recruiter= Recruiter::create($attributes);
             return response()->json([
                 "status"=>201,
-                "data"=>$recruiter
+                "data"=>[
+                    "recruiter"=>$recruiter
+                ]
             ],201);
         } else {
             return response()->json([
@@ -113,7 +119,9 @@ class RecruiterController extends Controller
                 $recruiter->update($attributes);
                 return response()->json([
                     "status"=>200,
-                    "data"=>$recruiter
+                    "data"=>[
+                        "recruiter"=>$recruiter
+                    ]
                 ],200);
             }
             $attributes["password"]=Hash::make($attributes["password"]);

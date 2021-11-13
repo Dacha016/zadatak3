@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 class InternController extends Controller
 {
     public function index(){
-        $intern=Intern::all();
+        $interns=Intern::all();
         return response()->json([
             "status"=>200,
-            "data"=>$intern
+            "data"=>[
+                "interns"=>$interns
+            ]
         ],200);
     }
     public function show($id){
@@ -26,7 +28,9 @@ class InternController extends Controller
         }
         return response()->json([
             "status"=>200,
-            "data"=>$intern
+            "data"=>[
+                "intern"=>$intern
+            ]
         ],200);
     }
     public function profile($id){
@@ -36,6 +40,12 @@ class InternController extends Controller
             ->distinct()
             ->get();
         $intern=collect($data)->toArray();
+        if(!$intern){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
 
         $data=Data::join("groups","data.group_id","=","groups.id")
             ->join("interns","data.intern_id","=","interns.id")
@@ -63,8 +73,8 @@ class InternController extends Controller
     }
     public function store(Request $request ){
         $attributes = $request->validate([
-            "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-            "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "name"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
+            "surname"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
             "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
             "adderss"=>["string","max:255"],
             "email"=>["required","max:255","email"],
@@ -90,7 +100,9 @@ class InternController extends Controller
         $intern= Intern::create($attributes);
         return response()->json([
             "status"=>201,
-            "data"=>$intern
+            "data"=>[
+                "intern"=>$intern
+            ]
         ],201);
     }
     public function update(Request $request, $id ){
@@ -121,7 +133,9 @@ class InternController extends Controller
         $intern->update($attributes);
         return response()->json([
             "status"=>200,
-            "data"=>"$intern"
+            "data"=>[
+                "intern"=>$intern
+            ]
         ],200);
     }
     public function destroy( Request $request,$id){

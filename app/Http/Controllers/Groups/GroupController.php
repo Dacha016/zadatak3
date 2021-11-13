@@ -24,7 +24,7 @@ class GroupController extends Controller
                 ]
         ],200);
     }
-    public function show($id,$assignmentId){
+    public function show($id){
         $group=Group::find($id);
         if(!$group){
             return response()->json([
@@ -41,45 +41,58 @@ class GroupController extends Controller
     }
 
     public function groupInfo($id){
+        $group=Group::find($id);
+        if(!$group){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not found"
+            ],404);
+        }
         $data=Data::leftjoin("groups","data.group_id","=","groups.id")
         ->where("groups.id",$id)
         ->select(["groups.title as group_title"])
         ->distinct()
         ->get();
         $group=collect($data)->toArray();
-
+        dd($group);
+        if(!$group){
+            return response()->json([
+                "status"=>404,
+                "message"=>"There are no users in the group"
+            ],404);
+        }
         $data=Data::leftjoin("mentors","data.mentor_id","=","mentors.id")
-        ->leftjoin("groups","data.group_id","=","groups.id")
-        ->where("groups.id",$id)
-        ->select(["mentors.name as mentor_name","mentors.surname as mentor_surname","mentors.city as mentor_city","mentors.skype as mentor_skype","mentors.email as mentor_email","mentors.password as mentor_password"])
-        ->distinct()
-        ->get();
-    $mentor=collect($data)->toArray();
+            ->leftjoin("groups","data.group_id","=","groups.id")
+            ->where("groups.id",$id)
+            ->select(["mentors.name as mentor_name","mentors.surname as mentor_surname","mentors.city as mentor_city","mentors.skype as mentor_skype","mentors.email as mentor_email","mentors.password as mentor_password"])
+            ->distinct()
+            ->get();
+        $mentor=collect($data)->toArray();
 
-    $data=Data::leftjoin("interns","data.intern_id","=","interns.id")
-        ->leftjoin("groups","data.group_id","=","groups.id")
-        ->where("groups.id",$id)
-        ->select(["interns.name as intern_name","interns.surname as intern_surname"])
-        ->distinct()
-        ->get();
-    $interns=collect($data)->toArray();
+        $data=Data::leftjoin("interns","data.intern_id","=","interns.id")
+            ->leftjoin("groups","data.group_id","=","groups.id")
+            ->where("groups.id",$id)
+            ->select(["interns.name as intern_name","interns.surname as intern_surname"])
+            ->distinct()
+            ->get();
+        $interns=collect($data)->toArray();
 
-    $data=Data::join("assignments","data.assignment_id","=","assignments.id")
-        ->leftjoin("groups","data.group_id","=","groups.id")
-        ->where("groups.id",$id)
-        ->select(["assignments.title as assignment_title","data.start_at","data.end_at"])
-        ->distinct()
-        ->get();
+        $data=Data::join("assignments","data.assignment_id","=","assignments.id")
+            ->leftjoin("groups","data.group_id","=","groups.id")
+            ->where("groups.id",$id)
+            ->select(["assignments.title as assignment_title","data.start_at","data.end_at"])
+            ->distinct()
+            ->get();
         $assignments=collect($data)->toArray();
-    return response()->json([
-        "status"=>200,
-        "data"=>[
-            "groups"=>$group,
-            "mentors"=>$mentor,
-            "interns"=>$interns,
-            "assignments"=>$assignments
-            ]
-    ],200);
+        return response()->json([
+            "status"=>200,
+            "data"=>[
+                "groups"=>$group,
+                "mentors"=>$mentor,
+                "interns"=>$interns,
+                "assignments"=>$assignments
+                ]
+        ],200);
     }
     public function store(Request $request ){
         $attributes = $request->validate([

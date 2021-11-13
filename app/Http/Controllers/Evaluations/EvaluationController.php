@@ -13,14 +13,16 @@ use Illuminate\Support\Facades\Gate;
 class EvaluationController extends Controller
 {
     public function index(){
-        $evaluation=Evaluation::leftjoin("interns","evaluations.intern_id","=","evaluations.id")
+        $evaluations=Evaluation::leftjoin("interns","evaluations.intern_id","=","evaluations.id")
             ->leftjoin("mentors","evaluations.mentor_id","=","mentors.id")
             ->leftjoin("assignments","evaluations.assignment_id","=","evaluations.id")
             ->get(["interns.name as intern_name","interns.surname as intern_surname","assignments.title as assignments_title","evaluations.pro","evaluations.con","evaluations.evaluation_day","mentors.name as mentor_name","mentors.surname as mentor_surname"]);
         return response()->json([
             "status"=>200,
-            "data"=>$evaluation
-            ],200);
+            "data"=>[
+                "evluations"=>$evaluations
+            ]
+        ],200);
     }
     public function show($id){
         $evaluation=Evaluation::leftjoin("interns","evaluations.intern_id","=","evaluations.id")
@@ -30,7 +32,9 @@ class EvaluationController extends Controller
         ->get(["interns.name as intern_name","interns.surname as intern_surname","assignments.title as assignments_title","evaluations.pro","evaluations.con","evaluations.evaluation_day","mentors.name as mentor_name","mentors.surname as mentor_surname"]);
         return response()->json([
             "status"=>200,
-            "data"=>$evaluation
+            "data"=>[
+                "evluations"=>$evaluation
+            ]
         ],200);
     }
     public function store(Request $request ){
@@ -78,7 +82,9 @@ class EvaluationController extends Controller
         $evaluation= Evaluation::create($attributes);
         return response()->json([
             "status"=>201,
-            "data"=>$evaluation
+            "data"=>[
+                "evluations"=>$evaluation
+            ]
         ],201);
     }
     public function destroy($id){

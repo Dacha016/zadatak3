@@ -13,10 +13,12 @@ class MentorController extends Controller
 {
     public function index(){
         if (Gate::allows('admin-recruiter-mentor')) {
-            $mentor=Mentor::all();
+            $mentors=Mentor::all();
             return response()->json([
                 "status"=>200,
-                "data"=>$mentor
+                "data"=>[
+                    "mentors"=>$mentors
+                ]
             ],200);
         } else {
             return response()->json([
@@ -36,7 +38,9 @@ class MentorController extends Controller
             }
             return response()->json([
                 "status"=>200,
-                "data"=>$mentor
+                "data"=>[
+                    "mentor"=>$mentor
+                ]
             ],200);
         } else {
             return response()->json([
@@ -48,36 +52,40 @@ class MentorController extends Controller
     public function profile($id){
         if (Gate::allows('admin-recruiter-mentor')) {
             $data=Data::rightjoin("mentors","data.mentor_id","=","mentors.id")
-            ->where("mentors.id",$id)
-            ->select(["mentors.name as mentor_name","mentors.surname as mentor_surname","mentors.city as mentor_city","mentors.skype as mentor_skype","mentors.email as mentor_email","mentors.password as mentor_password"])
-            ->distinct()
-            ->get();
-        $mentor=collect($data)->toArray();
+                ->where("mentors.id",$id)
+                ->select(["mentors.name as mentor_name","mentors.surname as mentor_surname","mentors.city as mentor_city","mentors.skype as mentor_skype","mentors.email as mentor_email","mentors.password as mentor_password"])
+                ->distinct()
+                ->get();
+            $mentor=collect($data)->toArray();
+            if(!$mentor){
+                return response()->json([
+                    "status"=>404,
+                    "message"=>"Not Found"
+                ],404);
+            }
+            $data=Data::join("groups","data.group_id","=","groups.id")
+                ->join("mentors","data.mentor_id","=","mentors.id")
+                ->where("mentors.id",$id)
+                ->select(["groups.title as group_title"])
+                ->distinct()
+                ->get();
+            $groups=collect($data)->toArray();
 
-        $data=Data::join("groups","data.group_id","=","groups.id")
-            ->join("mentors","data.mentor_id","=","mentors.id")
-            ->where("mentors.id",$id)
-            ->select(["groups.title as group_title"])
-            ->distinct()
-            ->get();
-        $groups=collect($data)->toArray();
-
-        $data=Data::join("interns","data.intern_id","=","interns.id")
-            ->join("mentors","data.mentor_id","=","mentors.id")
-            ->where("mentors.id",$id)
-            ->select(["interns.name as intern_name","interns.surname as intern_surname"])
-            ->distinct()
-            ->get();
-        $interns=collect($data)->toArray();
-        return response()->json([
-            "status"=>200,
-            "data"=>[
-                "mentor"=>$mentor,
-                "groups"=>$groups,
-                "interns"=>$interns
-                ]
-        ],200);
-
+            $data=Data::join("interns","data.intern_id","=","interns.id")
+                ->join("mentors","data.mentor_id","=","mentors.id")
+                ->where("mentors.id",$id)
+                ->select(["interns.name as intern_name","interns.surname as intern_surname"])
+                ->distinct()
+                ->get();
+            $interns=collect($data)->toArray();
+            return response()->json([
+                "status"=>200,
+                "data"=>[
+                    "mentor"=>$mentor,
+                    "groups"=>$groups,
+                    "interns"=>$interns
+                    ]
+            ],200);
         } else {
             return response()->json([
                 "status"=>403,
@@ -88,8 +96,8 @@ class MentorController extends Controller
     public function store(Request $request ){
         if (Gate::allows('admin-recruiter')) {
             $attributes = $request->validate([
-                "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+                "name"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
+                "surname"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
                 "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
                 "skype"=>["string","max:255"],
                 "email"=>["required","max:255","email"],
@@ -99,7 +107,7 @@ class MentorController extends Controller
             if($user){
                 return response()->json([
                     "status"=>403,
-                    "message"=>"Already exists"
+                    "message"=>"Email address already exists"
                 ],403);
             }
             if(!$attributes){
@@ -113,7 +121,9 @@ class MentorController extends Controller
             $mentor= Mentor::create($attributes);
             return response()->json([
                 "status"=>201,
-                "data"=>$mentor
+                "data"=>[
+                    "mentor"=>$mentor
+                ]
             ],201);
         } else {
             return response()->json([
@@ -150,7 +160,9 @@ class MentorController extends Controller
                 $mentor->update($attributes);
                 return response()->json([
                     "status"=>200,
-                    "data"=>$mentor
+                    "data"=>[
+                        "mentor"=>$mentor
+                    ]
                 ],200);
             }
             $attributes["password"]=Hash::make($attributes["password"]);
@@ -158,7 +170,9 @@ class MentorController extends Controller
             $mentor->update($attributes);
             return response()->json([
                 "status"=>200,
-                "data"=>$mentor
+                "data"=>[
+                    "mentor"=>$mentor
+                ]
             ],200);
         } else {
             return response()->json([
