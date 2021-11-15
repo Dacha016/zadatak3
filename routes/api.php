@@ -68,6 +68,11 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
         Route::get("info/{group}",[GroupController::class, "groupInfo"]);
         Route::put("/{group}",[GroupController::class, "update"]);
         Route::delete("/{group}",[GroupController::class, "destroy"]);
+        Route::group(['prefix' => 'data'],function(){
+            Route::post("/create",[DataController::class, "store"]);
+            Route::put("/{intern}",[DataController::class, "update"]);
+            Route::delete("/{intern}",[DataController::class, "destroy"]);
+        });
     });
     Route::group(['prefix' => 'assignments'],function(){
         Route::post("/create",[AssignmentController::class, "store"]);
@@ -85,10 +90,6 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
         Route::post("/create",[EvaluationController::class, "store"]);
         Route::delete("/{evaluation}",[EvaluationController::class, "destroy"]);
     });
-    Route::group(['prefix' => 'data'],function(){
-        Route::post("/create",[DataController::class, "store"]);
-        Route::put("/{intern}",[DataController::class, "update"]);
-        Route::delete("/{intern}",[DataController::class, "destroy"]);
-    });
+
 });
 
