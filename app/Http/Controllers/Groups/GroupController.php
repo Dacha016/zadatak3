@@ -105,9 +105,9 @@ class GroupController extends Controller
         }
         $group= Group::create($attributes);
         return response()->json([
-            "status"=>200,
+            "status"=>201,
             "data"=>$group
-        ],200);
+        ],201);
     }
     public function update(Request $request, $id ){
         $group=Group::find($id);

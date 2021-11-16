@@ -4,6 +4,8 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use App\Models\Admin;
+use App\Models\Assignment;
+use App\Models\Intern;
 use App\Models\Mentor;
 use App\Models\Recruiter;
 use App\Models\RegisteredUsers;
@@ -77,6 +79,20 @@ abstract class TestCase extends BaseTestCase
         Auth::loginUsingId($user->id);
         $token=$user->createToken("api-token")->plainTextToken;
         return["Authorization"=>$token, "Accept"=>"application/json"];
+    }
+    public function create_intern(){
+        $this->admin_login();
+        $intern= Intern::find(1);
+        if(!$intern){
+              Intern::create(["name"=>"Ivana","surname"=>"Orlovic","email"=>"ika@gmail.com","role_id"=>4]);
+        }
+    }
+    public function create_assignment(){
+        $this->admin_login();
+        $assignment= Assignment::find(1);
+        if(!$assignment){
+              Assignment::create(["title"=>"Learning Laravel","description"=>"Implement OOP in Laravel"]);
+        }
     }
 }
 
