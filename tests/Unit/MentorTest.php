@@ -73,6 +73,15 @@ class MentorTest extends TestCase
 
     // if logged user is Recruiter
 
+    public function test_if_logged_user_is_recruiter_mentor_store_with_bad_data()
+    {
+        $this->post("api/mentors/create",[
+            "name"=>"Bosko1",
+            "surname"=>"Stupar",
+            "email"=>"bosko@gmail.com",
+            "password"=>"123456"
+        ],$this->recruiter_login())->assertStatus(422);
+    }
     public function test_if_logged_user_is_recruiter_mentor_store()
     {
         $this->withoutExceptionHandling();
@@ -89,10 +98,21 @@ class MentorTest extends TestCase
             "email"=>"pera@gmail.com"
         ],$this->recruiter_login())->assertStatus(200);
     }
+    public function  test_if_logged_user_is_recruiter_mentor_update_with_bad_route()
+    {
+        $this->put("api/mentors/{id}",[
+            "email"=>"pera@gmail.com"
+        ],$this->recruiter_login())->assertStatus(404);
+    }
     public function  test_if_logged_user_is_recruiter_mentor_show()
     {
         $this->withoutExceptionHandling();
         $this->get("api/mentors/3",[],$this->recruiter_login())->assertStatus(200);
+    }
+    public function  test_if_logged_user_is_recruiter_mentor_show_with_bad_route()
+    {
+        $this->withoutExceptionHandling();
+        $this->get("api/mentors/{id}",[],$this->recruiter_login())->assertStatus(404);
     }
     public function  test_if_logged_user_is_recruiter_mentor_index()
     {
@@ -103,6 +123,10 @@ class MentorTest extends TestCase
     public function  test_if_logged_user_is_recruiter_mentor_delete()
     {
         $this->delete("api/mentors/3",[],$this->recruiter_login())->assertStatus(200);
+    }
+    public function  test_if_logged_user_is_recruiter_mentor_delete_with_bad_route()
+    {
+        $this->delete("api/mentors/{id}",[],$this->recruiter_login())->assertStatus(404);
     }
     // if logged user is Mentor
 
