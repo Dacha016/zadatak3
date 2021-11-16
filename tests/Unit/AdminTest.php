@@ -25,16 +25,34 @@ class AdminTest extends TestCase
             "password"=>"123456"
         ],$this->admin_login())->assertStatus(201);
     }
+    public function test_admin_store_with_bad_data()
+    {
+        $this->post("api/admins/create",["name"=>"Petar1",
+        "surname"=>"Petrovic",
+        "email"=>"pera@gmail.com",
+        "password"=>"123456"],$this->admin_login())->assertStatus(422);
+    }
     public function test_admin_update()
     {
         $this->put("api/admins/2",[
             "email"=>"pera@gmail.com"
         ],$this->admin_login())->assertStatus(200);
     }
+    public function test_admin_update_with_bad_route()
+    {
+        $this->put("api/admins/{id}",[
+            "email"=>"pera@gmail.com"
+        ],$this->admin_login())->assertStatus(404);
+    }
     public function test_admin_show()
     {
         $this->withoutExceptionHandling();
         $this->get("api/admins/1",[],$this->admin_login())->assertStatus(200);
+    }
+    public function test_admin_show_with_bad_route()
+    {
+        $this->withoutExceptionHandling();
+        $this->get("api/admins/{id}",[],$this->admin_login())->assertStatus(404);
     }
     public function test_admin_index()
     {
@@ -46,6 +64,10 @@ class AdminTest extends TestCase
     {
         $this->delete("api/admins/2",[],$this->admin_login())->assertStatus(200);
     }
+    public function test_admin_delete_with_bad_route()
+    {
+        $this->delete("api/admins/{id}",[],$this->admin_login())->assertStatus(404);
+    }
 
     public function test_admin_logout()
     {
@@ -53,7 +75,7 @@ class AdminTest extends TestCase
     }
 
 
-    // if logged user is Mentor
+    // if logged user is Recruiter
 
     public function test_if_logged_user_is_recruiter_admin_store()
     {
