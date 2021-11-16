@@ -30,6 +30,13 @@ class EvaluationController extends Controller
         ->leftjoin("assignments","evaluations.assignment_id","=","evaluations.id")
         ->where("evaluations.intern_id",$id)
         ->get(["interns.name as intern_name","interns.surname as intern_surname","assignments.title as assignments_title","evaluations.pro","evaluations.con","evaluations.evaluation_day","mentors.name as mentor_name","mentors.surname as mentor_surname"]);
+
+        if(count($evaluation)==0){
+            return response()->json([
+                "status"=>404,
+                "message"=>"Not Found"
+            ],404);
+        }
         return response()->json([
             "status"=>200,
             "data"=>[

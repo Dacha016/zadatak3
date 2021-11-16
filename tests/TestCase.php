@@ -35,8 +35,9 @@ abstract class TestCase extends BaseTestCase
         $this->admin_login();
         $recruiter= Recruiter::find(1);
         if(!$recruiter){
-              Recruiter::create(["name"=>"Sanja","surname"=>"Savic","email"=>"saki@gmail.com","password"=>Hash::make("123456"),"role_id"=>2]);
+             $recruiter= Recruiter::create(["name"=>"Sanja","surname"=>"Savic","email"=>"saki@gmail.com","password"=>Hash::make("123456"),"role_id"=>2]);
         }
+        return $recruiter->toArray();
     }
 
     public function recruiter_login()
@@ -60,8 +61,9 @@ abstract class TestCase extends BaseTestCase
         $this->admin_login();
         $mentor= Mentor::find(1);
         if(!$mentor){
-              Mentor::create(["name"=>"Aleksandra","surname"=>"Ceranic","email"=>"alex@gmail.com","password"=>Hash::make("123456"),"role_id"=>3]);
+            $mentor=  Mentor::create(["name"=>"Aleksandra","surname"=>"Ceranic","email"=>"alex@gmail.com","password"=>Hash::make("123456"),"role_id"=>3]);
         }
+        return $mentor->toArray();
     }
 
     public function mentor_login()
@@ -84,15 +86,18 @@ abstract class TestCase extends BaseTestCase
         $this->admin_login();
         $intern= Intern::find(1);
         if(!$intern){
-              Intern::create(["name"=>"Ivana","surname"=>"Orlovic","email"=>"ika@gmail.com","role_id"=>4]);
+            $intern=  Intern::create(["name"=>"Ivana","surname"=>"Orlovic","email"=>"ika@gmail.com","role_id"=>4]);
         }
+        return $intern->toArray();
     }
     public function create_assignment(){
         $this->admin_login();
         $assignment= Assignment::find(1);
         if(!$assignment){
-              Assignment::create(["title"=>"Learning Laravel","description"=>"Implement OOP in Laravel"]);
+             $assignment= Assignment::create(["title"=>"Learning Laravel","description"=>"Implement OOP in Laravel"]);
         }
+
+        return $assignment=$assignment->toArray();
     }
 }
 

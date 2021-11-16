@@ -13,44 +13,37 @@ class EvaluationTest extends TestCase
      */
     public function test_evaluation_store()
     {
+        $assignment= $this->create_assignment();
+        $intern=$this->create_intern();
+        $mentor= $this->create_mentor();
         $this->withoutExceptionHandling();
         $this->post("api/evaluations/create",[
-            "title"=>"PHP Nis"
+            "intern_id"=>$intern["id"],
+            "assignment_id"=>$assignment["id"],
+            "pro"=>"Some text",
+            "con"=>"Some another text",
+            "evaluation_day"=>"2021-11-16",
+            "mentor_id"=>$mentor["id"]
         ],$this->admin_login())->assertStatus(201);
     }
     public function test_evaluation_store_with_bad_data()
     {
+        $assignment= $this->create_assignment();
+        $intern=$this->create_intern();
+        $mentor= $this->create_mentor();
         $this->post("api/evaluations/create",[
-        "title"=>123456
+            "intern_id"=>1,
+            "assignment_id"=>1,
+            "pro"=>"Some text",
+            "con"=>"Some another text",
+            "evaluation_day"=>"2021-11-16",
+            "mentor_id"=>1
         ],$this->admin_login())->assertStatus(422);
-    }
-    public function test_evaluation_update()
-    {
-        $this->put("api/evaluations/1",[
-            "title"=>"Laravel"
-        ],$this->admin_login())->assertStatus(200);
-    }
-    public function test_evaluation_update_with_bad_route()
-    {
-        $this->put("api/evaluations/{id}",[
-            "title"=>"Laravel"
-        ],$this->admin_login())->assertStatus(404);
     }
     public function test_evaluation_show()
     {
         $this->withoutExceptionHandling();
-        $this->get("api/evaluations/1",[],$this->admin_login())->assertStatus(200);
-    }
-    public function test_evaluation_show_with_bad_route()
-    {
-        $this->withoutExceptionHandling();
-        $this->get("api/evaluations/{id}",[],$this->admin_login())->assertStatus(404);
-    }
-    public function test_evaluation_index()
-    {
-        $this->withoutExceptionHandling();
-        $this->get("api/evaluations/list",[],$this->admin_login())->assertStatus(200);
-
+        $this->get("api/evaluations/interns/1")->assertStatus(200);
     }
     public function test_evaluation_delete()
     {
@@ -60,5 +53,94 @@ class EvaluationTest extends TestCase
     {
         $this->delete("api/evaluations/{id}",[],$this->admin_login())->assertStatus(404);
     }
+    // if logged user is Recruiter
 
+    public function test_if_logged_user_is_recruiter_evaluation_store()
+    {
+        $assignment= $this->create_assignment();
+        $intern=$this->create_intern();
+        $mentor= $this->create_mentor();
+        $this->withoutExceptionHandling();
+        $this->post("api/evaluations/create",[
+            "intern_id"=>$intern["id"],
+            "assignment_id"=>$assignment["id"],
+            "pro"=>"Some text",
+            "con"=>"Some another text",
+            "evaluation_day"=>"2021-11-16",
+            "mentor_id"=>$mentor["id"]
+        ],$this->recruiter_login())->assertStatus(201);
+    }
+    public function test_if_logged_user_is_recruiter_evaluation_store_with_bad_data()
+    {
+        $assignment= $this->create_assignment();
+        $intern=$this->create_intern();
+        $mentor= $this->create_mentor();
+        $this->post("api/evaluations/create",[
+            "intern_id"=>1,
+            "assignment_id"=>1,
+            "pro"=>"Some text",
+            "con"=>"Some another text",
+            "evaluation_day"=>"2021-11-16",
+            "mentor_id"=>1
+        ],$this->recruiter_login())->assertStatus(422);
+    }
+    public function test_if_logged_user_is_recruiter_evaluation_delete()
+    {
+        $this->delete("api/evaluations/2",[],$this->recruiter_login())->assertStatus(403);
+    }
+    public function test_if_logged_user_is_recruiter_evaluation_delete_with_bad_route()
+    {
+        $this->delete("api/evaluations/{id}",[],$this->recruiter_login())->assertStatus(403);
+    }
+
+    // if logged user id mentor
+    public function test_if_logged_user_is_mentor_evaluation_store()
+    {
+        $assignment= $this->create_assignment();
+        $intern=$this->create_intern();
+        $mentor= $this->create_mentor();
+        $this->withoutExceptionHandling();
+        $this->post("api/evaluations/create",[
+            "intern_id"=>$intern["id"],
+            "assignment_id"=>$assignment["id"],
+            "pro"=>"Some text",
+            "con"=>"Some another text",
+            "evaluation_day"=>"2021-11-16",
+            "mentor_id"=>$mentor["id"]
+        ],$this->mentor_login())->assertStatus(201);
+    }
+    public function test_if_logged_user_is_mentor_evaluation_store_with_bad_data()
+    {
+        $assignment= $this->create_assignment();
+        $intern=$this->create_intern();
+        $mentor= $this->create_mentor();
+        $this->post("api/evaluations/create",[
+            "intern_id"=>1,
+            "assignment_id"=>1,
+            "pro"=>"Some text",
+            "con"=>"Some another text",
+            "evaluation_day"=>"2021-11-16",
+            "mentor_id"=>1
+        ],$this->mentor_login())->assertStatus(422);
+    }
+    public function test_if_logged_user_is_mentor_evaluation_delete()
+    {
+        $this->delete("api/evaluations/2",[],$this->mentor_login())->assertStatus(403);
+    }
+    public function test_if_logged_user_is_mentor_evaluation_delete_with_bad_route()
+    {
+        $this->delete("api/evaluations/{id}",[],$this->mentor_login())->assertStatus(403);
+    }
+
+    public function test_evaluation_show_with_bad_route()
+    {
+        $this->withoutExceptionHandling();
+        $this->get("api/evaluations/interns/{id}")->assertStatus(404);
+    }
+    public function test_evaluation_index()
+    {
+        $this->withoutExceptionHandling();
+        $this->get("api/evaluations/list")->assertStatus(200);
+
+    }
 }
