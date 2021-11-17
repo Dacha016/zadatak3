@@ -5,6 +5,7 @@ namespace Tests;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use App\Models\Admin;
 use App\Models\Assignment;
+use App\Models\Group;
 use App\Models\Intern;
 use App\Models\Mentor;
 use App\Models\Recruiter;
@@ -96,8 +97,15 @@ abstract class TestCase extends BaseTestCase
         if(!$assignment){
              $assignment= Assignment::create(["title"=>"Learning Laravel","description"=>"Implement OOP in Laravel"]);
         }
-
-        return $assignment=$assignment->toArray();
+        return $assignment->toArray();
+    }
+    public function create_group(){
+        $this->admin_login();
+        $group= Group::find(1);
+        if(!$group){
+             $group= Group::create(["title"=>"Nis PHP"]);
+        }
+        return $group->toArray();
     }
 }
 

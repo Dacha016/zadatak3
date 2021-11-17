@@ -70,8 +70,8 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
         Route::delete("/{group}",[GroupController::class, "destroy"]);
         Route::group(['prefix' => 'data'],function(){
             Route::post("/create",[DataController::class, "store"]);
-            Route::put("/{intern}",[DataController::class, "update"]);
-            Route::delete("/{intern}",[DataController::class, "destroy"]);
+            Route::put("/{data}",[DataController::class, "update"]);
+            Route::delete("/{data}",[DataController::class, "destroy"]);
         });
     });
     Route::group(['prefix' => 'assignments'],function(){

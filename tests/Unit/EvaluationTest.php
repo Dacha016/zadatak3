@@ -28,9 +28,7 @@ class EvaluationTest extends TestCase
     }
     public function test_evaluation_store_with_bad_data()
     {
-        $assignment= $this->create_assignment();
-        $intern=$this->create_intern();
-        $mentor= $this->create_mentor();
+
         $this->post("api/evaluations/create",[
             "intern_id"=>1,
             "assignment_id"=>1,
@@ -72,9 +70,7 @@ class EvaluationTest extends TestCase
     }
     public function test_if_logged_user_is_recruiter_evaluation_store_with_bad_data()
     {
-        $assignment= $this->create_assignment();
-        $intern=$this->create_intern();
-        $mentor= $this->create_mentor();
+
         $this->post("api/evaluations/create",[
             "intern_id"=>1,
             "assignment_id"=>1,
@@ -111,9 +107,6 @@ class EvaluationTest extends TestCase
     }
     public function test_if_logged_user_is_mentor_evaluation_store_with_bad_data()
     {
-        $assignment= $this->create_assignment();
-        $intern=$this->create_intern();
-        $mentor= $this->create_mentor();
         $this->post("api/evaluations/create",[
             "intern_id"=>1,
             "assignment_id"=>1,
@@ -125,7 +118,7 @@ class EvaluationTest extends TestCase
     }
     public function test_if_logged_user_is_mentor_evaluation_delete()
     {
-        $this->delete("api/evaluations/2",[],$this->mentor_login())->assertStatus(403);
+        $this->delete("api/evaluations/3",[],$this->mentor_login())->assertStatus(403);
     }
     public function test_if_logged_user_is_mentor_evaluation_delete_with_bad_route()
     {

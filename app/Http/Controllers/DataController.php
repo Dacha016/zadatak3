@@ -69,15 +69,12 @@ class DataController extends Controller
                 $attributes["start_at"] = date('Y-m-d');
                 $attributes["end_at"] = date('Y-m-d', strtotime("+15 days"));
             }
-            if(!$request["activated"]){
-                $attributes["start_at"] =null;
-                $attributes["end_at"] = null;
-            }
+
             $data= Data::create($attributes);
             return response()->json([
-                "status"=>200,
+                "status"=>201,
                 "data"=>$data
-            ],200);
+            ],201);
         } else {
             return response()->json([
                 "status"=>403,
@@ -96,6 +93,9 @@ class DataController extends Controller
             }
             if($request->exists("mentor_id")){
                 $mentor= Mentor::find($request["mentor_id"]);
+                $attributes = $request->validate([
+                    "mentor_id"=>["numeric"]
+                ]);
                 if(!$mentor){
                     return response()->json([
                         "status"=>422,
@@ -105,6 +105,9 @@ class DataController extends Controller
             }
             if($request->exists("intern_id")){
                 $intern= Intern::find($request["intern_id"]);
+                $attributes = $request->validate([
+                    "intern_id"=>["numeric"]
+                ]);
                 if(!$intern){
                     return response()->json([
                         "status"=>422,
@@ -114,6 +117,9 @@ class DataController extends Controller
             }
             if($request->exists("group_id")){
                 $group= Group::find($request["group_id"]);
+                $attributes = $request->validate([
+                    "group_id"=>["numeric"]
+                ]);
                 if(!$group){
                     return response()->json([
                         "status"=>422,
@@ -123,6 +129,9 @@ class DataController extends Controller
             }
             if($request->exists("assignment_id")){
                 $assignment= Assignment::find($request["assignment_id"]);
+                $attributes = $request->validate([
+                    "assignment_id"=>["numeric"]
+                ]);
                 if(!$assignment){
                     return response()->json([
                         "status"=>422,
@@ -131,11 +140,7 @@ class DataController extends Controller
                 }
             }
             $attributes = $request->validate([
-                "intern_id"=>["numeric"],
-                "mentor_id"=>["numeric"],
-                "group_id"=>["numeric"],
                 "activated"=>["boolean"],
-                "assignment_id"=>["numeric"],
                 "start_at"=>["date"],
                 "end_at"=>["date"]
             ]);
@@ -149,11 +154,7 @@ class DataController extends Controller
                 $attributes["start_at"] = date('Y-m-d');
                 $attributes["end_at"] = date('Y-m-d', strtotime("+15 days"));
             }
-            if(!$request["activated"]){
-                $attributes["start_at"] =null;
-                $attributes["end_at"] = null;
-            }
-            $data->create($attributes);
+            $data->update($attributes);
             return response()->json([
                 "status"=>200,
                 "data"=>$data
