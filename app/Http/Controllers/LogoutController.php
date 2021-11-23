@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RegisteredUsers;
+use App\Models\LoggedInUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +17,7 @@ class LogoutController extends Controller
             ],401);
         }
         if(Auth::check()){
-            $user=RegisteredUsers::where("email",Auth::user()->email)->first();
+            $user=LoggedInUser::where("email",Auth::user()->email)->first();
             $user->delete();
             Auth::user()->tokens->each(function($token, $key) {
                 $token->delete();

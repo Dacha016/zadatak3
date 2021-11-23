@@ -52,7 +52,7 @@ class AdminController extends Controller
         if (Gate::allows('admin')) {
             $attributes = $request->validate([
                 "name"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "surname"=>["required","string","max:255","regex:/('[a-zA-Z])?[a-zA-Z]*$/"],
+                "surname"=>["required","string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
                 "email"=>["required","max:255","email","string"],
                 "password"=>["required","min:6","string"]
             ]);
@@ -100,7 +100,7 @@ class AdminController extends Controller
         }
         $attributes = $request->validate([
             "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-            "surname"=>["string","max:255","regex:/('[a-zA-Z])?[a-zA-Z]*$/"],
+            "surname"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
             "email"=>["max:255","email"],
             "password"=>["min:6","string"]
         ]);

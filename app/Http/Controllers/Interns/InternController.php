@@ -74,9 +74,9 @@ class InternController extends Controller
     public function store(Request $request ){
         $attributes = $request->validate([
             "name"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
-            "surname"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
-            "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-            "adderss"=>["string","max:255"],
+            "surname"=>["required","string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
+            "city"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
+            "adderss"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
             "email"=>["required","max:255","email"],
             "phone"=>["string","max:50"],
             "CV"=>["string"],
@@ -115,9 +115,9 @@ class InternController extends Controller
         }
         $attributes = $request->validate([
             "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-            "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-            "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-            "adderss"=>["string","max:255"],
+            "surname"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
+            "city"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
+            "adderss"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
             "email"=>["max:255","email"],
             "phone"=>["string","max:50"],
             "CV"=>["string"],
@@ -129,7 +129,6 @@ class InternController extends Controller
                 "message"=>"Unprocessable Entity"
             ],422);
         }
-        $attributes["role_id"]=4;
         $intern->update($attributes);
         return response()->json([
             "status"=>200,

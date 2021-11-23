@@ -53,8 +53,8 @@ class RecruiterController extends Controller
         if (Gate::allows('admin')) {
             $attributes = $request->validate([
                 "name"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "surname"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+                "surname"=>["required","string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
+                "city"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
                 "email"=>["required","max:255","email"],
                 "password"=>["required","min:6","string"]
             ]);
@@ -77,7 +77,11 @@ class RecruiterController extends Controller
             return response()->json([
                 "status"=>201,
                 "data"=>[
-                    "recruiter"=>$recruiter
+                    "recruiter"=>[
+                        "name"=>$recruiter["name"],
+                        "surname"=>$recruiter["surname"],
+                        "email"=>$recruiter["email"]
+                    ]
                 ]
             ],201);
         } else {
@@ -98,8 +102,8 @@ class RecruiterController extends Controller
             }
             $attributes = $request->validate([
                 "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+                "surname"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
+                "city"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
                 "email"=>["max:255","email"],
                 "password"=>["min:6","string"]
             ]);
@@ -120,16 +124,25 @@ class RecruiterController extends Controller
                 return response()->json([
                     "status"=>200,
                     "data"=>[
-                        "recruiter"=>$recruiter
+                        "recruiter"=>[
+                            "name"=>$recruiter["name"],
+                            "surname"=>$recruiter["surname"],
+                            "email"=>$recruiter["email"]
+                        ]
                     ]
                 ],200);
             }
             $attributes["password"]=Hash::make($attributes["password"]);
-            $attributes["role_id"]=2;
             $recruiter->update($attributes);
             return response()->json([
                 "status"=>201,
-                "data"=>$recruiter
+                "data"=>[
+                    "recruiter"=>[
+                        "name"=>$recruiter["name"],
+                        "surname"=>$recruiter["surname"],
+                        "email"=>$recruiter["email"]
+                    ]
+                ]
             ],201);
         } else {
             return response()->json([

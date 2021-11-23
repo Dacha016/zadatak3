@@ -41,7 +41,7 @@ class LoginController extends Controller
                     return response()->json([
                         "status"=>200,
                         "data"=>[
-                            "user"=>Auth::user(),
+                            "logged_user"=>Auth::user(),
                             "token"=>$token
                         ],
                     ],200);

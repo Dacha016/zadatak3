@@ -9,7 +9,7 @@ use App\Models\Group;
 use App\Models\Intern;
 use App\Models\Mentor;
 use App\Models\Recruiter;
-use App\Models\RegisteredUsers;
+use App\Models\LoggedInUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,9 +19,9 @@ abstract class TestCase extends BaseTestCase
     public function admin_login()
     {
         $admin=collect( Admin::find(1))->toArray();
-        $user=RegisteredUsers::where(["email"=>$admin["email"]])->first();
+        $user=LoggedInUser::where(["email"=>$admin["email"]])->first();
         if(!$user){
-            $user=RegisteredUsers::create(["name"=>$admin["name"],"surname"=>$admin["surname"],"email"=>$admin["email"],"password"=>Hash::make($admin["password"]),"role_id"=>$admin["role_id"]]);
+            $user=LoggedInUser::create(["name"=>$admin["name"],"surname"=>$admin["surname"],"email"=>$admin["email"],"password"=>Hash::make($admin["password"]),"role_id"=>$admin["role_id"]]);
         }
         $this->post("api/login",[
         "email"=>$user["email"],
@@ -45,9 +45,9 @@ abstract class TestCase extends BaseTestCase
     {
         $this->create_recruiter();
         $recruiter=collect( Recruiter::find(1))->toArray();
-        $user=RegisteredUsers::where(["email"=>$recruiter["email"]])->first();
+        $user=LoggedInUser::where(["email"=>$recruiter["email"]])->first();
         if(!$user){
-            $user=RegisteredUsers::create(["name"=>$recruiter["name"],"surname"=>$recruiter["surname"],"email"=>$recruiter["email"],"password"=>$recruiter["password"],"role_id"=>$recruiter["role_id"]]);
+            $user=LoggedInUser::create(["name"=>$recruiter["name"],"surname"=>$recruiter["surname"],"email"=>$recruiter["email"],"password"=>$recruiter["password"],"role_id"=>$recruiter["role_id"]]);
         }
         $this->post("api/login",[
         "email"=>$user["email"],
@@ -71,9 +71,9 @@ abstract class TestCase extends BaseTestCase
     {
         $this->create_mentor();
         $mentor=collect( Mentor::find(1))->toArray();
-        $user=RegisteredUsers::where(["email"=>$mentor["email"]])->first();
+        $user=LoggedInUser::where(["email"=>$mentor["email"]])->first();
         if(!$user){
-            $user=RegisteredUsers::create(["name"=>$mentor["name"],"surname"=>$mentor["surname"],"email"=>$mentor["email"],"password"=>$mentor["password"],"role_id"=>$mentor["role_id"]]);
+            $user=LoggedInUser::create(["name"=>$mentor["name"],"surname"=>$mentor["surname"],"email"=>$mentor["email"],"password"=>$mentor["password"],"role_id"=>$mentor["role_id"]]);
         }
         $this->post("api/login",[
         "email"=>$user["email"],

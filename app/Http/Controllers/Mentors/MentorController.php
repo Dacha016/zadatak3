@@ -97,11 +97,11 @@ class MentorController extends Controller
         if (Gate::allows('admin-recruiter')) {
             $attributes = $request->validate([
                 "name"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "surname"=>["required","string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+                "surname"=>["required","string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
+                "city"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
                 "skype"=>["string","max:255"],
                 "email"=>["required","max:255","email"],
-                "password"=>["required","min:6","string"],
+                "password"=>["required","min:6","string"]
             ]);
             $user=Mentor::where("email",$attributes["email"])->first();
             if($user){
@@ -122,7 +122,13 @@ class MentorController extends Controller
             return response()->json([
                 "status"=>201,
                 "data"=>[
-                    "mentor"=>$mentor
+                    "mentor"=>[
+                        "name"=>$mentor["name"],
+                        "surname"=>$mentor["surname"],
+                        "email"=>$mentor["email"],
+                        "skype"=>$mentor["skype"],
+                        "city"=>$mentor["city"]
+                    ]
                 ]
             ],201);
         } else {
@@ -143,8 +149,8 @@ class MentorController extends Controller
             }
             $attributes = $request->validate([
                 "name"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "surname"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
-                "city"=>["string","max:255","regex:/^[a-zA-Z\s]*$/"],
+                "surname"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
+                "city"=>["string","max:255","regex:/^[a-zA-Z]+('[a-zA-Z])?[a-zA-Z\s]*$/"],
                 "skype"=>["string","max:255"],
                 "email"=>["max:255","email"],
                 "password"=>["min:6","string"],
@@ -161,17 +167,28 @@ class MentorController extends Controller
                 return response()->json([
                     "status"=>200,
                     "data"=>[
-                        "mentor"=>$mentor
+                        "mentor"=>[
+                            "name"=>$mentor["name"],
+                            "surname"=>$mentor["surname"],
+                            "email"=>$mentor["email"],
+                            "skype"=>$mentor["skype"],
+                            "city"=>$mentor["city"]
+                        ]
                     ]
                 ],200);
             }
             $attributes["password"]=Hash::make($attributes["password"]);
-            $attributes["role_id"]=3;
             $mentor->update($attributes);
             return response()->json([
                 "status"=>200,
                 "data"=>[
-                    "mentor"=>$mentor
+                    "mentor"=>[
+                        "name"=>$mentor["name"],
+                        "surname"=>$mentor["surname"],
+                        "email"=>$mentor["email"],
+                        "skype"=>$mentor["skype"],
+                        "city"=>$mentor["city"]
+                    ]
                 ]
             ],200);
         } else {
