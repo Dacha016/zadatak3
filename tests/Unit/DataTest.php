@@ -15,11 +15,8 @@ class DataTest extends TestCase
     {
         $assignment= $this->create_assignment();
         $intern=$this->create_intern();
-
         $mentor= $this->create_mentor();
-
         $group= $this->create_group();
-
         $this->withoutExceptionHandling();
         $this->post("api/groups/data/create",[
             "intern_id"=>$intern["id"],

@@ -3,12 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
-use App\Models\Assignment;
-use App\Models\Group;
-use App\Models\Intern;
 use App\Models\Role;
-
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,7 +24,7 @@ class DatabaseSeeder extends Seeder
             "name"=>"Admin",
             "surname"=>"Admin",
             "email"=>"admin@gmail.com",
-            "password"=>bcrypt("123456"),
+            "password"=>Hash::make("123456"),
             "role_id"=>1
         ]);
     }

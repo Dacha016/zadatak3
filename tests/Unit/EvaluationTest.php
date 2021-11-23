@@ -28,7 +28,6 @@ class EvaluationTest extends TestCase
     }
     public function test_evaluation_store_with_bad_data()
     {
-
         $this->post("api/evaluations/create",[
             "intern_id"=>1,
             "assignment_id"=>1,
@@ -70,7 +69,6 @@ class EvaluationTest extends TestCase
     }
     public function test_if_logged_user_is_recruiter_evaluation_store_with_bad_data()
     {
-
         $this->post("api/evaluations/create",[
             "intern_id"=>1,
             "assignment_id"=>1,
@@ -134,6 +132,5 @@ class EvaluationTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $this->get("api/evaluations/list")->assertStatus(200);
-
     }
 }

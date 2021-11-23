@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\RegisteredUsers;
+use App\Models\LoggedInUser;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -27,13 +27,13 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
     // Admins
-         Gate::define('admin', fn (RegisteredUsers $registeredUsers) => $registeredUsers->role_id == 1);
+         Gate::define('admin', fn (LoggedInUser $loggedInUser) => $loggedInUser->role_id == 1);
 
 
     // Recruiter-Admin
-        Gate::define('admin-recruiter', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2]));
+        Gate::define('admin-recruiter', fn (LoggedInUser $loggedInUser) => in_array($loggedInUser->role_id,[1,2]));
 
     //All
-        Gate::define('admin-recruiter-mentor', fn (RegisteredUsers $registeredUsers) => in_array($registeredUsers->role_id,[1,2,3]));
+        Gate::define('admin-recruiter-mentor', fn (LoggedInUser $loggedInUser) => in_array($loggedInUser->role_id,[1,2,3]));
     }
 }
