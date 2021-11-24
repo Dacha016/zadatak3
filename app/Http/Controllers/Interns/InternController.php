@@ -89,13 +89,6 @@ class InternController extends Controller
                 "message"=>"Already exists"
             ],403);
         }
-        if(!$attributes){
-            return response()->json([
-                "status"=>422,
-                "message"=>"Unprocessable Entity"
-
-            ],422);
-        }
         $attributes["role_id"]=4;
         $intern= Intern::create($attributes);
         return response()->json([
@@ -123,12 +116,6 @@ class InternController extends Controller
             "CV"=>["string"],
             "gitHub"=>["string"]
         ]);
-        if(!$attributes){
-            return response()->json([
-                "status"=>422,
-                "message"=>"Unprocessable Entity"
-            ],422);
-        }
         $intern->update($attributes);
         return response()->json([
             "status"=>200,

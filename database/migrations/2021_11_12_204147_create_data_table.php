@@ -15,10 +15,10 @@ class CreateDataTable extends Migration
     {
         Schema::create('data', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("intern_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId("mentor_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("intern_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("mentor_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId("group_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId("assignment_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("assignment_id")->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamp("start_at")->nullable();
             $table->timestamp("end_at")->nullable();
             $table->boolean("activated")->default(0);

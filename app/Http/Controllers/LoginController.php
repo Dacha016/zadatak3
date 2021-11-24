@@ -36,12 +36,16 @@ class LoginController extends Controller
                     }
                     LoggedInUser::create(["name"=>$user["name"],"surname"=>$user["surname"],"email"=>$user["email"],"password"=>$user["password"],"role_id"=>$user["role_id"]]);
                     $user=LoggedInUser::where("email",$attributes["email"])->first();
-                    Auth::loginUsingId($user->id);
+                   $loggedUser= Auth::loginUsingId($user->id);
                     $token=$user->createToken("Api Token")->plainTextToken;
                     return response()->json([
                         "status"=>200,
                         "data"=>[
-                            "logged_user"=>Auth::user(),
+                            "logged_user"=>[
+                            "name"=>$loggedUser["name"],
+                            "surname"=>$loggedUser["surname"],
+                            "email"=>$loggedUser["email"]
+                        ],
                             "token"=>$token
                         ],
                     ],200);

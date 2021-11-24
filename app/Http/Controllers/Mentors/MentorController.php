@@ -110,12 +110,6 @@ class MentorController extends Controller
                     "message"=>"Email address already exists"
                 ],403);
             }
-            if(!$attributes){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Unprocessable Entity"
-                ],422);
-            }
             $attributes["password"]=Hash::make($attributes["password"]);
             $attributes["role_id"]=3;
             $mentor= Mentor::create($attributes);
@@ -156,12 +150,6 @@ class MentorController extends Controller
                 "password"=>["min:6","string"],
                 "group_id"=>["numeric"],
             ]);
-            if(!$attributes){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Unprocessable Entity"
-                ],422);
-            }
             if(!$request->exists('password')){
                 $mentor->update($attributes);
                 return response()->json([

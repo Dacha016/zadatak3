@@ -3,19 +3,18 @@
 namespace App\Http\Controllers\Evaluations;
 
 use App\Http\Controllers\Controller;
-use App\Models\Assignment;
+use App\Models\Data;
 use App\Models\Evaluation;
-use App\Models\Intern;
-use App\Models\Mentor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rules\Exists;
 
 class EvaluationController extends Controller
 {
     public function index(){
-        $evaluations=Evaluation::leftjoin("interns","evaluations.intern_id","=","evaluations.id")
-            ->leftjoin("mentors","evaluations.mentor_id","=","mentors.id")
-            ->leftjoin("assignments","evaluations.assignment_id","=","evaluations.id")
+        $evaluations=Evaluation::join("interns","evaluations.intern_id","=","interns.id")
+            ->join("mentors","evaluations.mentor_id","=","mentors.id")
+            ->join("assignments","evaluations.assignment_id","=","assignments.id")
             ->get(["interns.name as intern_name","interns.surname as intern_surname","assignments.title as assignments_title","evaluations.pro","evaluations.con","evaluations.evaluation_day","mentors.name as mentor_name","mentors.surname as mentor_surname"]);
         return response()->json([
             "status"=>200,
@@ -25,9 +24,9 @@ class EvaluationController extends Controller
         ],200);
     }
     public function show($id){
-        $evaluation=Evaluation::leftjoin("interns","evaluations.intern_id","=","evaluations.id")
-        ->leftjoin("mentors","evaluations.mentor_id","=","mentors.id")
-        ->leftjoin("assignments","evaluations.assignment_id","=","evaluations.id")
+        $evaluation=Evaluation::join("interns","evaluations.intern_id","=","interns.id")
+        ->join("mentors","evaluations.mentor_id","=","mentors.id")
+        ->join("assignments","evaluations.assignment_id","=","assignments.id")
         ->where("evaluations.intern_id",$id)
         ->get(["interns.name as intern_name","interns.surname as intern_surname","assignments.title as assignments_title","evaluations.pro","evaluations.con","evaluations.evaluation_day","mentors.name as mentor_name","mentors.surname as mentor_surname"]);
 
@@ -45,54 +44,43 @@ class EvaluationController extends Controller
         ],200);
     }
     public function store(Request $request ){
-        if($request->exists("intern_id")){
-            $intern= Intern::find($request["intern_id"]);
-            if(!$intern){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined intern"
-                ],422);
-            }
-        }
-        if($request->exists("mentor_id")){
-            $mentor= Mentor::find($request["mentor_id"]);
-            if(!$mentor){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined mentor"
-                ],422);
-            }
-        }
-        if($request->exists("assignment_id")){
-            $assignment= Assignment::find($request["assignment_id"]);
-            if(!$assignment){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Undefined assignment"
-                ],422);
-            }
-        }
         $attributes = $request->validate([
-            "intern_id"=>["required","numeric",],
-            "assignment_id"=>["required","numeric"],
+            "intern_id"=>"exists:data,data.intern_id",
+            "assignment_id"=>"exists:data,data.assignment_id",
+            "mentor_id"=>"exists:data,data.mentor_id",
             "pro"=>["required","string"],
             "con"=>["required","string"],
-            "evaluation_day"=>["required","date"],
-            "mentor_id"=>["required","numeric"]
+            "evaluation_day"=>["required","date"]
         ]);
-        if(!$attributes){
-            return response()->json([
-                "status"=>422,
-                "message"=>"Unprocessable Entity"
-            ],422);
+        $data=Data::leftjoin("interns","data.intern_id","=","interns.id")
+            ->leftjoin("groups","data.group_id","=","groups.id")
+            ->where("data.intern_id",$request["intern_id"])
+            ->select(["groups.id"])
+            ->distinct()
+            ->get();
+        $group=collect($data)->toArray();
+        $data=Data::leftjoin("mentors","data.mentor_id","=","mentors.id")
+            ->leftjoin("groups","data.group_id","=","groups.id")
+            ->where("groups.id",$group[0]["id"])
+            ->select(["mentors.id"])
+            ->distinct()
+            ->get();
+        $mentors=collect($data)->toArray();
+        for($i=0;$i<count($mentors);$i++){
+            if($mentors[$i]["id"]===$request["mentors_id"]){
+                $evaluation= Evaluation::create($attributes);
+                return response()->json([
+                    "status"=>201,
+                    "data"=>[
+                        "evluations"=>$evaluation
+                    ]
+                ],201);
+            }
         }
-        $evaluation= Evaluation::create($attributes);
         return response()->json([
-            "status"=>201,
-            "data"=>[
-                "evluations"=>$evaluation
-            ]
-        ],201);
+            "status"=>403,
+            "message"=>"Wrong Mentor"
+        ],403);
     }
     public function destroy($id){
         if (Gate::allows('admin')) {

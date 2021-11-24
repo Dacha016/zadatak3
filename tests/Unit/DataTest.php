@@ -28,7 +28,6 @@ class DataTest extends TestCase
     }
     public function test_data_store_with_bad_data()
     {
-        $this->withoutExceptionHandling();
         $this->post("api/groups/data/create",[
             "intern_id"=>1,
             "group_id"=>1,
@@ -75,7 +74,6 @@ class DataTest extends TestCase
     }
     public function test_if_logged_user_is_recruiter_data_store_with_bad_data()
     {
-        $this->withoutExceptionHandling();
         $this->post("api/groups/data/create",[
             "intern_id"=>1,
             "group_id"=>1,
@@ -122,7 +120,6 @@ class DataTest extends TestCase
     }
     public function test_if_logged_user_is_mentor_data_store_with_bad_data()
     {
-        $this->withoutExceptionHandling();
         $this->post("api/groups/data/create",[
             "intern_id"=>1,
             "group_id"=>1,

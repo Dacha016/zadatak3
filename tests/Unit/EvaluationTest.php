@@ -16,7 +16,15 @@ class EvaluationTest extends TestCase
         $assignment= $this->create_assignment();
         $intern=$this->create_intern();
         $mentor= $this->create_mentor();
+        $group= $this->create_group();
         $this->withoutExceptionHandling();
+        $this->post("api/groups/data/create",[
+            "intern_id"=>$intern["id"],
+            "group_id"=>$group["id"],
+            "assignment_id"=>$assignment["id"],
+            "activated"=>0,
+            "mentor_id"=>$mentor["id"]
+        ],$this->admin_login());
         $this->post("api/evaluations/create",[
             "intern_id"=>$intern["id"],
             "assignment_id"=>$assignment["id"],
@@ -57,7 +65,15 @@ class EvaluationTest extends TestCase
         $assignment= $this->create_assignment();
         $intern=$this->create_intern();
         $mentor= $this->create_mentor();
+        $group= $this->create_group();
         $this->withoutExceptionHandling();
+        $this->post("api/groups/data/create",[
+            "intern_id"=>$intern["id"],
+            "group_id"=>$group["id"],
+            "assignment_id"=>$assignment["id"],
+            "activated"=>0,
+            "mentor_id"=>$mentor["id"]
+        ],$this->recruiter_login());
         $this->post("api/evaluations/create",[
             "intern_id"=>$intern["id"],
             "assignment_id"=>$assignment["id"],
@@ -93,7 +109,15 @@ class EvaluationTest extends TestCase
         $assignment= $this->create_assignment();
         $intern=$this->create_intern();
         $mentor= $this->create_mentor();
+        $group= $this->create_group();
         $this->withoutExceptionHandling();
+        $this->post("api/groups/data/create",[
+            "intern_id"=>$intern["id"],
+            "group_id"=>$group["id"],
+            "assignment_id"=>$assignment["id"],
+            "activated"=>0,
+            "mentor_id"=>$mentor["id"]
+        ],$this->mentor_login());
         $this->post("api/evaluations/create",[
             "intern_id"=>$intern["id"],
             "assignment_id"=>$assignment["id"],

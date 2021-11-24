@@ -104,12 +104,7 @@ class AdminController extends Controller
             "email"=>["max:255","email"],
             "password"=>["min:6","string"]
         ]);
-        if(!$attributes){
-            return response()->json([
-                "status"=>422,
-                "message"=>"Unprocessable Entity"
-            ],422);
-        }
+    
         if(!$request->exists('password')){
             $admin->update($attributes);
             return response()->json([

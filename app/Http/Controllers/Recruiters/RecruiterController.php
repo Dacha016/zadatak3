@@ -65,12 +65,6 @@ class RecruiterController extends Controller
                     "message"=>"Email address already exists"
                 ],403);
             }
-            if(!$attributes){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Unprocessable Entity"
-                ],422);
-            }
             $attributes["password"]=Hash::make($attributes["password"]);
             $attributes["role_id"]=2;
             $recruiter= Recruiter::create($attributes);
@@ -112,12 +106,6 @@ class RecruiterController extends Controller
                     "status"=>404,
                     "message"=>"Not Found"
                 ],404);
-            }
-            if(!$attributes){
-                return response()->json([
-                    "status"=>422,
-                    "message"=>"Unprocessable Entity"
-                ],422);
             }
             if(!$request->exists('password')){
                 $recruiter->update($attributes);

@@ -97,12 +97,6 @@ class GroupController extends Controller
         $attributes = $request->validate([
             "title"=>["string","max:255"]
         ]);
-        if(!$attributes){
-            return response()->json([
-                "status"=>422,
-                "message"=>"Unprocessable Entity"
-            ],422);
-        }
         $group= Group::create($attributes);
         return response()->json([
             "status"=>201,
@@ -120,13 +114,6 @@ class GroupController extends Controller
         $attributes = $request->validate([
             "title"=>["string","max:255"]
         ]);
-        if(!$attributes){
-            return response()->json([
-                "status"=>422,
-                "message"=>"Unprocessable Entity"
-            ],422);
-        }
-
         $group->create($attributes);
         return response()->json([
             "status"=>200,
