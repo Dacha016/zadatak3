@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
     // Admins
-         Gate::define('admin', fn (LoggedInUser $loggedInUser) => $loggedInUser->role_id == 1);
+         Gate::define('admin', fn (LoggedInUser $loggedInUser) => $loggedInUser->role_id === 1);
 
 
     // Recruiter-Admin
@@ -35,5 +35,8 @@ class AuthServiceProvider extends ServiceProvider
 
     //All
         Gate::define('admin-recruiter-mentor', fn (LoggedInUser $loggedInUser) => in_array($loggedInUser->role_id,[1,2,3]));
+
+    //Mentor
+        Gate::define('mentor', fn (LoggedInUser $loggedInUser) => $loggedInUser->role_id === 3);
     }
 }

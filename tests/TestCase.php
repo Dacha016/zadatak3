@@ -5,6 +5,7 @@ namespace Tests;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use App\Models\Admin;
 use App\Models\Assignment;
+use App\Models\Data;
 use App\Models\Group;
 use App\Models\Intern;
 use App\Models\Mentor;
@@ -18,7 +19,7 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication;
     public function admin_login()
     {
-        $admin=collect( Admin::find(1))->toArray();
+        $admin=collect( Admin::first())->toArray();
         $user=LoggedInUser::where(["email"=>$admin["email"]])->first();
         if(!$user){
             $user=LoggedInUser::create(["name"=>$admin["name"],"surname"=>$admin["surname"],"email"=>$admin["email"],"password"=>Hash::make($admin["password"]),"role_id"=>$admin["role_id"]]);
@@ -34,7 +35,7 @@ abstract class TestCase extends BaseTestCase
 
     public function create_recruiter(){
         $this->admin_login();
-        $recruiter= Recruiter::find(1);
+        $recruiter= Recruiter::first();
         if(!$recruiter){
              $recruiter= Recruiter::create(["name"=>"Sanja","surname"=>"Savic","email"=>"saki@gmail.com","password"=>Hash::make("123456"),"role_id"=>2]);
         }
@@ -44,7 +45,7 @@ abstract class TestCase extends BaseTestCase
     public function recruiter_login()
     {
         $this->create_recruiter();
-        $recruiter=collect( Recruiter::find(1))->toArray();
+        $recruiter=collect( Recruiter::first())->toArray();
         $user=LoggedInUser::where(["email"=>$recruiter["email"]])->first();
         if(!$user){
             $user=LoggedInUser::create(["name"=>$recruiter["name"],"surname"=>$recruiter["surname"],"email"=>$recruiter["email"],"password"=>$recruiter["password"],"role_id"=>$recruiter["role_id"]]);
@@ -60,7 +61,7 @@ abstract class TestCase extends BaseTestCase
 
     public function create_mentor(){
         $this->admin_login();
-        $mentor= Mentor::find(1);
+        $mentor= Mentor::first();
         if(!$mentor){
             $mentor=  Mentor::create(["name"=>"Aleksandra","surname"=>"Ceranic","email"=>"alex@gmail.com","password"=>Hash::make("123456"),"role_id"=>3]);
         }
@@ -70,7 +71,7 @@ abstract class TestCase extends BaseTestCase
     public function mentor_login()
     {
         $this->create_mentor();
-        $mentor=collect( Mentor::find(1))->toArray();
+        $mentor=collect( Mentor::first())->toArray();
         $user=LoggedInUser::where(["email"=>$mentor["email"]])->first();
         if(!$user){
             $user=LoggedInUser::create(["name"=>$mentor["name"],"surname"=>$mentor["surname"],"email"=>$mentor["email"],"password"=>$mentor["password"],"role_id"=>$mentor["role_id"]]);
@@ -85,7 +86,7 @@ abstract class TestCase extends BaseTestCase
     }
     public function create_intern(){
         $this->admin_login();
-        $intern= Intern::find(1);
+        $intern= Intern::first();
         if(!$intern){
             $intern=  Intern::create(["name"=>"Ivana","surname"=>"Orlovic","email"=>"ika@gmail.com","role_id"=>4]);
         }
@@ -93,7 +94,7 @@ abstract class TestCase extends BaseTestCase
     }
     public function create_assignment(){
         $this->admin_login();
-        $assignment= Assignment::find(1);
+        $assignment= Assignment::first();
         if(!$assignment){
              $assignment= Assignment::create(["title"=>"Learning Laravel","description"=>"Implement OOP in Laravel"]);
         }
@@ -101,11 +102,29 @@ abstract class TestCase extends BaseTestCase
     }
     public function create_group(){
         $this->admin_login();
-        $group= Group::find(1);
+        $group= Group::first();
         if(!$group){
              $group= Group::create(["title"=>"Nis PHP"]);
         }
         return $group->toArray();
+    }
+    public function create_data(){
+        $this->mentor_login();
+        $data=Data::first();
+        if(!$data){
+            $intern=$this->create_intern();
+            $mentor=$this->create_mentor();
+            $assignment=$this->create_assignment();
+            $group=$this->create_group();
+            $data= Data::create([
+                "intern_id"=>$intern["id"],
+                "assignment_id"=>$assignment["id"],
+                "group_id"=>$group["id"],
+                "activated"=>0,
+                "mentor_id"=>$mentor["id"]
+            ]);
+        }
+        return $data->toArray();
     }
 }
 

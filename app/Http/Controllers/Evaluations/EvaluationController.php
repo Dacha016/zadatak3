@@ -7,7 +7,7 @@ use App\Models\Data;
 use App\Models\Evaluation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\Rules\Exists;
+
 
 class EvaluationController extends Controller
 {
@@ -44,42 +44,51 @@ class EvaluationController extends Controller
         ],200);
     }
     public function store(Request $request ){
-        $attributes = $request->validate([
-            "intern_id"=>"exists:data,data.intern_id",
-            "assignment_id"=>"exists:data,data.assignment_id",
-            "mentor_id"=>"exists:data,data.mentor_id",
-            "pro"=>["required","string"],
-            "con"=>["required","string"],
-            "evaluation_day"=>["required","date"]
-        ]);
-        $data=Data::leftjoin("interns","data.intern_id","=","interns.id")
-            ->leftjoin("groups","data.group_id","=","groups.id")
-            ->where("data.intern_id",$request["intern_id"])
-            ->select(["groups.id"])
-            ->distinct()
-            ->get();
-        $group=collect($data)->toArray();
-        $data=Data::leftjoin("mentors","data.mentor_id","=","mentors.id")
-            ->leftjoin("groups","data.group_id","=","groups.id")
-            ->where("groups.id",$group[0]["id"])
-            ->select(["mentors.id"])
-            ->distinct()
-            ->get();
-        $mentors=collect($data)->toArray();
-        for($i=0;$i<count($mentors);$i++){
-            if($mentors[$i]["id"]===$request["mentors_id"]){
-                $evaluation= Evaluation::create($attributes);
-                return response()->json([
-                    "status"=>201,
-                    "data"=>[
-                        "evluations"=>$evaluation
-                    ]
-                ],201);
+        if (Gate::allows('mentor')) {
+            $attributes = $request->validate([
+                "intern_id"=>"exists:data,data.intern_id",
+                "assignment_id"=>"exists:data,data.assignment_id",
+                "mentor_id"=>"exists:data,data.mentor_id",
+                "pro"=>["required","string"],
+                "con"=>["required","string"],
+                "evaluation_day"=>["required","date"]
+            ]);
+            $data=Data::leftjoin("interns","data.intern_id","=","interns.id")
+                ->leftjoin("groups","data.group_id","=","groups.id")
+                ->where("data.intern_id",$request["intern_id"])
+                ->select(["groups.id"])
+                ->distinct()
+                ->get();
+            $group=collect($data)->toArray();
+            $data=Data::leftjoin("mentors","data.mentor_id","=","mentors.id")
+                ->leftjoin("groups","data.group_id","=","groups.id")
+                ->where("groups.id",$group[0]["id"])
+                ->select(["mentors.id"])
+                ->distinct()
+                ->get();
+            $mentors=collect($data)->toArray();
+
+            for($i=0;$i<count($mentors);$i++){
+
+                if($mentors[$i]["id"]==$attributes["mentor_id"]){
+
+                    $evaluation= Evaluation::create($attributes);
+                    return response()->json([
+                        "status"=>201,
+                        "data"=>[
+                            "evluations"=>$evaluation
+                        ]
+                    ],201);
+                }
             }
+            return response()->json([
+                "status"=>422,
+                "message"=>"Wrong mentor"
+            ],422);
         }
         return response()->json([
             "status"=>403,
-            "message"=>"Wrong Mentor"
+            "message"=>"Forbidden"
         ],403);
     }
     public function destroy($id){

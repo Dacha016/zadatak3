@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Data;
 use Tests\TestCase;
 
 class EvaluationTest extends TestCase
@@ -13,46 +14,34 @@ class EvaluationTest extends TestCase
      */
     public function test_evaluation_store()
     {
-        $assignment= $this->create_assignment();
-        $intern=$this->create_intern();
-        $mentor= $this->create_mentor();
-        $group= $this->create_group();
         $this->withoutExceptionHandling();
-        $this->post("api/groups/data/create",[
-            "intern_id"=>$intern["id"],
-            "group_id"=>$group["id"],
-            "assignment_id"=>$assignment["id"],
-            "activated"=>0,
-            "mentor_id"=>$mentor["id"]
-        ],$this->admin_login());
+        $this->create_data();
+        $data=Data::first()->toArray();
         $this->post("api/evaluations/create",[
-            "intern_id"=>$intern["id"],
-            "assignment_id"=>$assignment["id"],
+            "intern_id"=>$data["intern_id"],
+            "assignment_id"=>$data["assignment_id"],
             "pro"=>"Some text",
             "con"=>"Some another text",
             "evaluation_day"=>"2021-11-16",
-            "mentor_id"=>$mentor["id"]
-        ],$this->admin_login())->assertStatus(201);
+            "mentor_id"=>$data["mentor_id"]
+        ],$this->admin_login())->assertStatus(403);
+
     }
     public function test_evaluation_store_with_bad_data()
     {
         $this->post("api/evaluations/create",[
-            "intern_id"=>1,
+            "intern_id"=>10,
             "assignment_id"=>1,
             "pro"=>"Some text",
             "con"=>"Some another text",
             "evaluation_day"=>"2021-11-16",
             "mentor_id"=>1
-        ],$this->admin_login())->assertStatus(422);
+        ],$this->admin_login())->assertStatus(403);
     }
     public function test_evaluation_show()
     {
         $this->withoutExceptionHandling();
-        $this->get("api/evaluations/interns/1")->assertStatus(200);
-    }
-    public function test_evaluation_delete()
-    {
-        $this->delete("api/evaluations/1",[],$this->admin_login())->assertStatus(200);
+        $this->get("api/evaluations/interns/1")->assertStatus(404);
     }
     public function test_evaluation_delete_with_bad_route()
     {
@@ -62,37 +51,28 @@ class EvaluationTest extends TestCase
 
     public function test_if_logged_user_is_recruiter_evaluation_store()
     {
-        $assignment= $this->create_assignment();
-        $intern=$this->create_intern();
-        $mentor= $this->create_mentor();
-        $group= $this->create_group();
         $this->withoutExceptionHandling();
-        $this->post("api/groups/data/create",[
-            "intern_id"=>$intern["id"],
-            "group_id"=>$group["id"],
-            "assignment_id"=>$assignment["id"],
-            "activated"=>0,
-            "mentor_id"=>$mentor["id"]
-        ],$this->recruiter_login());
+        $this->create_data();
+        $data=Data::first()->toArray();
         $this->post("api/evaluations/create",[
-            "intern_id"=>$intern["id"],
-            "assignment_id"=>$assignment["id"],
+            "intern_id"=>$data["intern_id"],
+            "assignment_id"=>$data["assignment_id"],
             "pro"=>"Some text",
             "con"=>"Some another text",
             "evaluation_day"=>"2021-11-16",
-            "mentor_id"=>$mentor["id"]
-        ],$this->recruiter_login())->assertStatus(201);
+            "mentor_id"=>$data["mentor_id"]
+        ],$this->recruiter_login())->assertStatus(403);
     }
     public function test_if_logged_user_is_recruiter_evaluation_store_with_bad_data()
     {
         $this->post("api/evaluations/create",[
-            "intern_id"=>1,
+            "intern_id"=>15,
             "assignment_id"=>1,
             "pro"=>"Some text",
             "con"=>"Some another text",
             "evaluation_day"=>"2021-11-16",
             "mentor_id"=>1
-        ],$this->recruiter_login())->assertStatus(422);
+        ],$this->recruiter_login())->assertStatus(403);
     }
     public function test_if_logged_user_is_recruiter_evaluation_delete()
     {
@@ -106,31 +86,22 @@ class EvaluationTest extends TestCase
     // if logged user id mentor
     public function test_if_logged_user_is_mentor_evaluation_store()
     {
-        $assignment= $this->create_assignment();
-        $intern=$this->create_intern();
-        $mentor= $this->create_mentor();
-        $group= $this->create_group();
         $this->withoutExceptionHandling();
-        $this->post("api/groups/data/create",[
-            "intern_id"=>$intern["id"],
-            "group_id"=>$group["id"],
-            "assignment_id"=>$assignment["id"],
-            "activated"=>0,
-            "mentor_id"=>$mentor["id"]
-        ],$this->mentor_login());
+        $this->create_data();
+        $data=Data::first()->toArray();
         $this->post("api/evaluations/create",[
-            "intern_id"=>$intern["id"],
-            "assignment_id"=>$assignment["id"],
+            "intern_id"=>$data["intern_id"],
+            "assignment_id"=>$data["assignment_id"],
             "pro"=>"Some text",
             "con"=>"Some another text",
             "evaluation_day"=>"2021-11-16",
-            "mentor_id"=>$mentor["id"]
+            "mentor_id"=>$data["mentor_id"]
         ],$this->mentor_login())->assertStatus(201);
     }
     public function test_if_logged_user_is_mentor_evaluation_store_with_bad_data()
     {
         $this->post("api/evaluations/create",[
-            "intern_id"=>1,
+            "intern_id"=>25,
             "assignment_id"=>1,
             "pro"=>"Some text",
             "con"=>"Some another text",
@@ -146,7 +117,10 @@ class EvaluationTest extends TestCase
     {
         $this->delete("api/evaluations/{id}",[],$this->mentor_login())->assertStatus(403);
     }
-
+    public function test_evaluation_delete()
+    {
+        $this->delete("api/evaluations/1",[],$this->admin_login())->assertStatus(200);
+    }
     public function test_evaluation_show_with_bad_route()
     {
         $this->withoutExceptionHandling();
