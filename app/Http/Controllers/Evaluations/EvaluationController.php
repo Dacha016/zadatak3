@@ -54,7 +54,7 @@ class EvaluationController extends Controller
             ]);
             $data=GroupData::leftjoin("interns","group_data.intern_id","=","interns.id")
                 ->leftjoin("groups","group_data.group_id","=","groups.id")
-                ->where("data.intern_id",$request["intern_id"])
+                ->where("group_data.intern_id",$request["intern_id"])
                 ->select(["groups.id"])
                 ->distinct()
                 ->get();

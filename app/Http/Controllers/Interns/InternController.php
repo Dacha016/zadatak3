@@ -48,7 +48,7 @@ class InternController extends Controller
         }
 
         $data=GroupData::join("groups","group_data.group_id","=","groups.id")
-            ->join("interns","data.intern_id","=","interns.id")
+            ->join("interns","group_data.intern_id","=","interns.id")
             ->where("interns.id",$id)
             ->select(["groups.title as group_title"])
             ->distinct()
@@ -56,9 +56,9 @@ class InternController extends Controller
         $groups=collect($data)->toArray();
 
         $data=GroupData::join("assignments","group_data.assignment_id","=","assignments.id")
-            ->join("interns","data.intern_id","=","interns.id")
+            ->join("interns","group_data.intern_id","=","interns.id")
             ->where("interns.id",$id)
-            ->select(["assignments.title as assignment_title","data.start_at","data.end_at"])
+            ->select(["assignments.title as assignment_title","group_data.start_at","group_data.end_at"])
             ->distinct()
             ->get();
         $assignments=collect($data)->toArray();

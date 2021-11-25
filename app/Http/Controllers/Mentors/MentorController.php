@@ -64,7 +64,7 @@ class MentorController extends Controller
                 ],404);
             }
             $data=GroupData::join("groups","group_data.group_id","=","groups.id")
-                ->join("mentors","data.mentor_id","=","mentors.id")
+                ->join("mentors","group_data.mentor_id","=","mentors.id")
                 ->where("mentors.id",$id)
                 ->select(["groups.title as group_title"])
                 ->distinct()
@@ -72,7 +72,7 @@ class MentorController extends Controller
             $groups=collect($data)->toArray();
 
             $data=GroupData::join("interns","group_data.intern_id","=","interns.id")
-                ->join("mentors","data.mentor_id","=","mentors.id")
+                ->join("mentors","group_data.mentor_id","=","mentors.id")
                 ->where("mentors.id",$id)
                 ->select(["interns.name as intern_name","interns.surname as intern_surname"])
                 ->distinct()

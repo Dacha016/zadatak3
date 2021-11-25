@@ -61,7 +61,7 @@ class GroupController extends Controller
             ],404);
         }
         $data=GroupData::leftjoin("mentors","group_data.mentor_id","=","mentors.id")
-            ->leftjoin("groups","data.group_id","=","groups.id")
+            ->leftjoin("groups","group_data.group_id","=","groups.id")
             ->where("groups.id",$id)
             ->select(["mentors.name as mentor_name","mentors.surname as mentor_surname","mentors.city as mentor_city","mentors.skype as mentor_skype","mentors.email as mentor_email","mentors.password as mentor_password"])
             ->distinct()
@@ -69,7 +69,7 @@ class GroupController extends Controller
         $mentor=collect($data)->toArray();
 
         $data=GroupData::leftjoin("interns","group_data.intern_id","=","interns.id")
-            ->leftjoin("groups","data.group_id","=","groups.id")
+            ->leftjoin("groups","group_data.group_id","=","groups.id")
             ->where("groups.id",$id)
             ->select(["interns.name as intern_name","interns.surname as intern_surname"])
             ->distinct()
@@ -77,9 +77,9 @@ class GroupController extends Controller
         $interns=collect($data)->toArray();
 
         $data=GroupData::join("assignments","group_data.assignment_id","=","assignments.id")
-            ->leftjoin("groups","data.group_id","=","groups.id")
+            ->leftjoin("groups","group_data.group_id","=","groups.id")
             ->where("groups.id",$id)
-            ->select(["assignments.title as assignment_title","data.start_at","data.end_at"])
+            ->select(["assignments.title as assignment_title","group_data.start_at","group_data.end_at"])
             ->distinct()
             ->get();
         $assignments=collect($data)->toArray();

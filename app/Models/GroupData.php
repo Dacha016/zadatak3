@@ -8,5 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class GroupData extends Model
 {
     use HasFactory;
+    protected $table = "group_data";
     protected $guarded=[];
+
 }
