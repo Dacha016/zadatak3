@@ -38,7 +38,7 @@ class MentorTest extends TestCase
     {
         $this->put("api/mentors/{id}",[
             "email"=>"pera@gmail.com"
-        ],$this->admin_login())->assertStatus(404);
+        ],$this->admin_login())->assertStatus(403);
     }
     public function test_mentor_show()
     {
@@ -102,7 +102,7 @@ class MentorTest extends TestCase
     {
         $this->put("api/mentors/{id}",[
             "email"=>"pera@gmail.com"
-        ],$this->recruiter_login())->assertStatus(404);
+        ],$this->recruiter_login())->assertStatus(403);
     }
     public function  test_if_logged_user_is_recruiter_mentor_show()
     {

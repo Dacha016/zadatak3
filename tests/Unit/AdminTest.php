@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Admin;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
@@ -34,15 +35,19 @@ class AdminTest extends TestCase
     }
     public function test_admin_update()
     {
-        $this->put("api/admins/2",[
-            "email"=>"pera@gmail.com"
-        ],$this->admin_login())->assertStatus(200);
+        $admin=Admin::where("id",1)->first()->toArray();
+        $loggedAdmin=$this->admin_login();
+        if($loggedAdmin[0]["id"]===$admin["id"]){
+            $this->put("api/admins/1",[
+                "email"=>"pera@gmail.com"
+            ])->assertStatus(200);
+        }
     }
     public function test_admin_update_with_bad_route()
     {
         $this->put("api/admins/{id}",[
             "email"=>"pera@gmail.com"
-        ],$this->admin_login())->assertStatus(404);
+        ],$this->admin_login())->assertStatus(403);
     }
     public function test_admin_show()
     {

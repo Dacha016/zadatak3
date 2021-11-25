@@ -39,7 +39,7 @@ class RecruiterTest extends TestCase
     {
         $this->put("api/recruiters/{id}",[
             "email"=>"pera@gmail.com"
-        ],$this->admin_login())->assertStatus(404);
+        ],$this->admin_login())->assertStatus(403);
     }
     public function test_recruiter_show()
     {

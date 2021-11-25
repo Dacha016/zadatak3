@@ -28,9 +28,9 @@ abstract class TestCase extends BaseTestCase
         "email"=>$user["email"],
         "password"=>$user["password"]
         ]);
-        Auth::loginUsingId($user->id);
+        $admin=Auth::loginUsingId($user->id);
         $token=$user->createToken("api-token")->plainTextToken;
-        return["Authorization"=>$token, "Accept"=>"application/json"];
+        return[$admin,"Authorization"=>$token, "Accept"=>"application/json"];
     }
 
     public function create_recruiter(){

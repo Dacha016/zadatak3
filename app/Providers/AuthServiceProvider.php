@@ -32,17 +32,29 @@ class AuthServiceProvider extends ServiceProvider
     // Admin-Recruiter
         Gate::define('admin', fn (LoggedInUser $loggedInUser) => $loggedInUser->role_id === 1);
         Gate::define('admin-own', function( LoggedInUser $loggedInUser,$id){
-            $admin=Admin::where("id",$id)->first()->toArray();
+            $admin=Admin::where("id",$id)->first();
+            if(!$admin){
+                return false;
+            }
+            $admin=$admin->toArray();
             return  $loggedInUser->email==$admin["email"];
         });
         Gate::define('update-recruiter', function( LoggedInUser $loggedInUser,$id){
-            $recruiter=Recruiter::where("id",$id)->first()->toArray();
+            $recruiter=Recruiter::where("id",$id)->first();
+            if(!$recruiter){
+                return false;
+            }
+            $recruiter=$recruiter->toArray();
             return $loggedInUser->role_id === 1 || $loggedInUser->email==$recruiter["email"];
         } );
     //Mentor
         Gate::define('admin-recruiter', fn (LoggedInUser $loggedInUser) => in_array($loggedInUser->role_id,[1,2]));
         Gate::define('update-mentor', function( LoggedInUser $loggedInUser,$id){
-            $mentor=Mentor::where("id",$id)->first()->toArray();
+            $mentor=Mentor::where("id",$id)->first();
+            if(!$mentor){
+                return false;
+            }
+            $mentor=$mentor->toArray();
             return  in_array($loggedInUser->role_id,[1,2]) || $loggedInUser->email==$mentor["email"];
         } );
         Gate::define('mentor', fn (LoggedInUser $loggedInUser) => $loggedInUser->role_id === 3);

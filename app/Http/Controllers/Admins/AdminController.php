@@ -139,7 +139,7 @@ class AdminController extends Controller
         }
     }
     public function destroy( $id){
-        if (Gate::allows('admin-own',$id)) {
+        if (Gate::allows('admin')) {
             $admin=Admin::find($id);
             if(!$admin){
                 return response()->json([
