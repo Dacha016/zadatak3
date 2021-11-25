@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Evaluations;
 
 use App\Http\Controllers\Controller;
-use App\Models\GroupData;
+
 use App\Models\Evaluation;
+use App\Models\GroupData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
@@ -45,9 +46,9 @@ class EvaluationController extends Controller
     public function store(Request $request ){
         if (Gate::allows('mentor')) {
             $attributes = $request->validate([
-                "intern_id"=>"exists:data,data.intern_id",
-                "assignment_id"=>"exists:data,data.assignment_id",
-                "mentor_id"=>"exists:data,data.mentor_id",
+                "intern_id"=>"exists:group_data,group_data.intern_id",
+                "assignment_id"=>"exists:group_data,group_data.assignment_id",
+                "mentor_id"=>"exists:group_data,group_data.mentor_id",
                 "pro"=>["required","string"],
                 "con"=>["required","string"],
                 "evaluation_day"=>["required","date"]
@@ -59,6 +60,7 @@ class EvaluationController extends Controller
                 ->distinct()
                 ->get();
             $group=collect($data)->toArray();
+
             $data=GroupData::leftjoin("mentors","group_data.mentor_id","=","mentors.id")
                 ->leftjoin("groups","group_data.group_id","=","groups.id")
                 ->where("groups.id",$group[0]["id"])
