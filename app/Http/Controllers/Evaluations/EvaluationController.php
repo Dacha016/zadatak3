@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Evaluations;
 
 use App\Http\Controllers\Controller;
-use App\Models\Data;
+use App\Models\GroupData;
 use App\Models\Evaluation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-
 
 class EvaluationController extends Controller
 {
@@ -53,15 +52,15 @@ class EvaluationController extends Controller
                 "con"=>["required","string"],
                 "evaluation_day"=>["required","date"]
             ]);
-            $data=Data::leftjoin("interns","data.intern_id","=","interns.id")
-                ->leftjoin("groups","data.group_id","=","groups.id")
+            $data=GroupData::leftjoin("interns","group_data.intern_id","=","interns.id")
+                ->leftjoin("groups","group_data.group_id","=","groups.id")
                 ->where("data.intern_id",$request["intern_id"])
                 ->select(["groups.id"])
                 ->distinct()
                 ->get();
             $group=collect($data)->toArray();
-            $data=Data::leftjoin("mentors","data.mentor_id","=","mentors.id")
-                ->leftjoin("groups","data.group_id","=","groups.id")
+            $data=GroupData::leftjoin("mentors","group_data.mentor_id","=","mentors.id")
+                ->leftjoin("groups","group_data.group_id","=","groups.id")
                 ->where("groups.id",$group[0]["id"])
                 ->select(["mentors.id"])
                 ->distinct()
@@ -69,9 +68,7 @@ class EvaluationController extends Controller
             $mentors=collect($data)->toArray();
 
             for($i=0;$i<count($mentors);$i++){
-
                 if($mentors[$i]["id"]==$attributes["mentor_id"]){
-
                     $evaluation= Evaluation::create($attributes);
                     return response()->json([
                         "status"=>201,

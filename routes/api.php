@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Admins\AdminController;
 use App\Http\Controllers\Assignments\AssignmentController;
-use App\Http\Controllers\DataController;
+use App\Http\Controllers\GroupDataController;
 use App\Http\Controllers\Evaluations\EvaluationController;
 use App\Http\Controllers\Groups\GroupController;
 use App\Http\Controllers\Interns\InternController;
@@ -69,9 +69,9 @@ Route::group(['middleware' => 'auth:sanctum'],function(){
         Route::put("/{group}",[GroupController::class, "update"]);
         Route::delete("/{group}",[GroupController::class, "destroy"]);
         Route::group(['prefix' => 'data'],function(){
-            Route::post("/create",[DataController::class, "store"]);
-            Route::put("/{data}",[DataController::class, "update"]);
-            Route::delete("/{data}",[DataController::class, "destroy"]);
+            Route::post("/create",[GroupDataController::class, "store"]);
+            Route::put("/{data}",[GroupDataController::class, "update"]);
+            Route::delete("/{data}",[GroupDataController::class, "destroy"]);
         });
     });
     Route::group(['prefix' => 'assignments'],function(){

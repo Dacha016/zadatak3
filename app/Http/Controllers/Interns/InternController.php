@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Interns;
 
 use App\Http\Controllers\Controller;
-use App\Models\Data;
+use App\Models\GroupData;
 use App\Models\Intern;
 use Illuminate\Http\Request;
 
@@ -34,7 +34,7 @@ class InternController extends Controller
         ],200);
     }
     public function profile($id){
-        $data=Data::rightjoin("interns","data.intern_id","=","interns.id")
+        $data=GroupData::rightjoin("interns","group_data.intern_id","=","interns.id")
             ->where("interns.id",$id)
             ->select(["interns.name as intern_name","interns.surname as intern_surname","interns.city as intern_city","interns.address as intern_address","interns.email as intern_email","interns.phone as intern_phone","interns.CV as intern_CV","interns.gitHub as intern_gitHub"])
             ->distinct()
@@ -47,7 +47,7 @@ class InternController extends Controller
             ],404);
         }
 
-        $data=Data::join("groups","data.group_id","=","groups.id")
+        $data=GroupData::join("groups","group_data.group_id","=","groups.id")
             ->join("interns","data.intern_id","=","interns.id")
             ->where("interns.id",$id)
             ->select(["groups.title as group_title"])
@@ -55,7 +55,7 @@ class InternController extends Controller
             ->get();
         $groups=collect($data)->toArray();
 
-        $data=Data::join("assignments","data.assignment_id","=","assignments.id")
+        $data=GroupData::join("assignments","group_data.assignment_id","=","assignments.id")
             ->join("interns","data.intern_id","=","interns.id")
             ->where("interns.id",$id)
             ->select(["assignments.title as assignment_title","data.start_at","data.end_at"])

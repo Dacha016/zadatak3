@@ -5,7 +5,7 @@ namespace Tests;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use App\Models\Admin;
 use App\Models\Assignment;
-use App\Models\Data;
+use App\Models\GroupData;
 use App\Models\Group;
 use App\Models\Intern;
 use App\Models\Mentor;
@@ -108,15 +108,15 @@ abstract class TestCase extends BaseTestCase
         }
         return $group->toArray();
     }
-    public function create_data(){
+    public function create_group_data(){
         $this->mentor_login();
-        $data=Data::first();
+        $data=GroupData::first();
         if(!$data){
             $intern=$this->create_intern();
             $mentor=$this->create_mentor();
             $assignment=$this->create_assignment();
             $group=$this->create_group();
-            $data= Data::create([
+            $data= GroupData::create([
                 "intern_id"=>$intern["id"],
                 "assignment_id"=>$assignment["id"],
                 "group_id"=>$group["id"],

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Groups;
 
 use App\Http\Controllers\Controller;
-use App\Models\Data;
+use App\Models\GroupData;
 use App\Models\Group;
 use Illuminate\Http\Request;
 
@@ -48,7 +48,7 @@ class GroupController extends Controller
                 "message"=>"Not found"
             ],404);
         }
-        $data=Data::leftjoin("groups","data.group_id","=","groups.id")
+        $data=GroupData::leftjoin("groups","group_data.group_id","=","groups.id")
         ->where("groups.id",$id)
         ->select(["groups.title as group_title"])
         ->distinct()
@@ -60,7 +60,7 @@ class GroupController extends Controller
                 "message"=>"There are no users in the group"
             ],404);
         }
-        $data=Data::leftjoin("mentors","data.mentor_id","=","mentors.id")
+        $data=GroupData::leftjoin("mentors","group_data.mentor_id","=","mentors.id")
             ->leftjoin("groups","data.group_id","=","groups.id")
             ->where("groups.id",$id)
             ->select(["mentors.name as mentor_name","mentors.surname as mentor_surname","mentors.city as mentor_city","mentors.skype as mentor_skype","mentors.email as mentor_email","mentors.password as mentor_password"])
@@ -68,7 +68,7 @@ class GroupController extends Controller
             ->get();
         $mentor=collect($data)->toArray();
 
-        $data=Data::leftjoin("interns","data.intern_id","=","interns.id")
+        $data=GroupData::leftjoin("interns","group_data.intern_id","=","interns.id")
             ->leftjoin("groups","data.group_id","=","groups.id")
             ->where("groups.id",$id)
             ->select(["interns.name as intern_name","interns.surname as intern_surname"])
@@ -76,7 +76,7 @@ class GroupController extends Controller
             ->get();
         $interns=collect($data)->toArray();
 
-        $data=Data::join("assignments","data.assignment_id","=","assignments.id")
+        $data=GroupData::join("assignments","group_data.assignment_id","=","assignments.id")
             ->leftjoin("groups","data.group_id","=","groups.id")
             ->where("groups.id",$id)
             ->select(["assignments.title as assignment_title","data.start_at","data.end_at"])

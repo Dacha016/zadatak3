@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Mentors;
 
 use App\Http\Controllers\Controller;
-use App\Models\Data;
+use App\Models\GroupData;
 use App\Models\Mentor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -51,7 +51,7 @@ class MentorController extends Controller
     }
     public function profile($id){
         if (Gate::allows('admin-recruiter-mentor')) {
-            $data=Data::rightjoin("mentors","data.mentor_id","=","mentors.id")
+            $data=GroupData::rightjoin("mentors","group_data.mentor_id","=","mentors.id")
                 ->where("mentors.id",$id)
                 ->select(["mentors.name as mentor_name","mentors.surname as mentor_surname","mentors.city as mentor_city","mentors.skype as mentor_skype","mentors.email as mentor_email","mentors.password as mentor_password"])
                 ->distinct()
@@ -63,7 +63,7 @@ class MentorController extends Controller
                     "message"=>"Not Found"
                 ],404);
             }
-            $data=Data::join("groups","data.group_id","=","groups.id")
+            $data=GroupData::join("groups","group_data.group_id","=","groups.id")
                 ->join("mentors","data.mentor_id","=","mentors.id")
                 ->where("mentors.id",$id)
                 ->select(["groups.title as group_title"])
@@ -71,7 +71,7 @@ class MentorController extends Controller
                 ->get();
             $groups=collect($data)->toArray();
 
-            $data=Data::join("interns","data.intern_id","=","interns.id")
+            $data=GroupData::join("interns","group_data.intern_id","=","interns.id")
                 ->join("mentors","data.mentor_id","=","mentors.id")
                 ->where("mentors.id",$id)
                 ->select(["interns.name as intern_name","interns.surname as intern_surname"])
@@ -133,7 +133,7 @@ class MentorController extends Controller
         }
     }
     public function update(Request $request, $id){
-        if (Gate::allows('admin-recruiter')) {
+        if (Gate::allows('update-mentor',$id)) {
             $mentor=Mentor::find($id);
             if(!$mentor){
                 return response()->json([

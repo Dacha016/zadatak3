@@ -86,7 +86,7 @@ class RecruiterController extends Controller
         }
     }
     public function update(Request $request, $id ){
-        if (Gate::allows('admin')) {
+        if (Gate::allows('update-recruiter',$id)) {
             $recruiter=Recruiter::find($id);
             if(!$recruiter){
                 return response()->json([
@@ -101,12 +101,6 @@ class RecruiterController extends Controller
                 "email"=>["max:255","email"],
                 "password"=>["min:6","string"]
             ]);
-            if(!$recruiter){
-                return response()->json([
-                    "status"=>404,
-                    "message"=>"Not Found"
-                ],404);
-            }
             if(!$request->exists('password')){
                 $recruiter->update($attributes);
                 return response()->json([

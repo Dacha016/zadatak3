@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\Data;
+use App\Models\GroupData;
 use Tests\TestCase;
 
 class EvaluationTest extends TestCase
@@ -15,8 +15,8 @@ class EvaluationTest extends TestCase
     public function test_evaluation_store()
     {
         $this->withoutExceptionHandling();
-        $this->create_data();
-        $data=Data::first()->toArray();
+        $this->create_group_data();
+        $data=GroupData::first()->toArray();
         $this->post("api/evaluations/create",[
             "intern_id"=>$data["intern_id"],
             "assignment_id"=>$data["assignment_id"],
@@ -52,8 +52,8 @@ class EvaluationTest extends TestCase
     public function test_if_logged_user_is_recruiter_evaluation_store()
     {
         $this->withoutExceptionHandling();
-        $this->create_data();
-        $data=Data::first()->toArray();
+        $this->create_group_data();
+        $data=GroupData::first()->toArray();
         $this->post("api/evaluations/create",[
             "intern_id"=>$data["intern_id"],
             "assignment_id"=>$data["assignment_id"],
@@ -86,9 +86,9 @@ class EvaluationTest extends TestCase
     // if logged user id mentor
     public function test_if_logged_user_is_mentor_evaluation_store()
     {
-        $this->withoutExceptionHandling();
-        $this->create_data();
-        $data=Data::first()->toArray();
+        $data=$this->create_group_data();
+
+
         $this->post("api/evaluations/create",[
             "intern_id"=>$data["intern_id"],
             "assignment_id"=>$data["assignment_id"],

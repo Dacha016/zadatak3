@@ -90,7 +90,7 @@ class AdminController extends Controller
         }
     }
     public function update( Request $request, $id ){
-        if (Gate::allows('admin')) {
+        if (Gate::allows('admin-own',$id)) {
             $admin=Admin::find($id);
         if(!$admin){
             return response()->json([
@@ -104,7 +104,7 @@ class AdminController extends Controller
             "email"=>["max:255","email"],
             "password"=>["min:6","string"]
         ]);
-    
+
         if(!$request->exists('password')){
             $admin->update($attributes);
             return response()->json([
@@ -139,7 +139,7 @@ class AdminController extends Controller
         }
     }
     public function destroy( $id){
-        if (Gate::allows('admin')) {
+        if (Gate::allows('admin-own',$id)) {
             $admin=Admin::find($id);
             if(!$admin){
                 return response()->json([

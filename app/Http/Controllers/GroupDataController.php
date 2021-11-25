@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Data;
+use App\Models\GroupData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class DataController extends Controller
+class GroupDataController extends Controller
 {
     public function store(Request $request ){
         if (Gate::allows('admin-recruiter-mentor')) {
@@ -26,7 +26,7 @@ class DataController extends Controller
                 $attributes["end_at"] = date('Y-m-d', strtotime("+15 days"));
             }
 
-            $data= Data::create($attributes);
+            $data= GroupData::create($attributes);
             return response()->json([
                 "status"=>201,
                 "data"=>$data
@@ -40,7 +40,7 @@ class DataController extends Controller
     }
     public function update(Request $request, $id ){
         if (Gate::allows('admin-recruiter-mentor')) {
-            $data=Data::find($id);
+            $data=GroupData::find($id);
             if(!$data){
                 return response()->json([
                     "status"=>404,
@@ -75,7 +75,7 @@ class DataController extends Controller
     }
     public function destroy($id){
         if (Gate::allows('admin-recruiter-mentor')) {
-            $data=Data::find($id);
+            $data=GroupData::find($id);
             if(!$data){
                 return response()->json([
                     "status"=>404,
